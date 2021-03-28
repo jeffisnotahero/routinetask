@@ -20,6 +20,7 @@
 
     # //Calculate 3 distributors & Other's data//
     # -Open revenue CSV and read everything into memory
+    # -Open booking CSV and read everything into memory
 
     # -Create distributor Class for 3 distributors & Other with Booking, Revenue, Cost, Net sales, Net profit margin properties
     # -Create Object for 3 distributors & Other
@@ -35,7 +36,6 @@
 
     #     -else
     #         -Assign...by modifying...
-    #             -Calculate Net profit margin
     
     # -Create objects array with 3 distributor Objects
     #     -Loop through it
@@ -50,7 +50,6 @@
     # -Print out all Booking, Revenue, Cost, Net sales, Net profit margin value for 3 distributors and Other
 
     #  //Calculate Monthly total Booking & Revenue//
-    # -Open booking CSV and read everything into memory
 
     # -Create monthly_performance Parent Class with total_amount, cost, Net profit, Net profit margin properties
     # -Create revenue & booking Child Class
@@ -75,21 +74,11 @@
 import csv
 import sys
 
-# # Check command-line argument
-# # 1st argv => csv
-# if len(sys.argv) != 2:
-#     print("Usage: python routine.py 'YOUR CSV'.csv")
-#     sys.exit(1)
-
-# Open CSV and read everything into memory
-with open(sys.argv[1], "r", encoding='shift_jis') as database:
-    data = csv.reader(database)
-
-    # Skip first row (description)
-    next(data)
-    for row in data:
-        content = row[12]
-        print (content)
+# Check command-line argument
+# 1st argv => csv
+if len(sys.argv) != 2:
+    print("Usage: python routine.py 'YOUR CSV'.csv")
+    sys.exit(1)
 
 # Create Distributor class
 class Distributor:
@@ -104,6 +93,46 @@ class Distributor:
 m = Distributor(0, 0, 0, 0, 0)
 t = Distributor(0, 0, 0, 0, 0)
 n = Distributor(0, 0, 0, 0, 0)
+o = Distributor(0, 0, 0, 0, 0)
+
+# Function for update data
+def update(distributor):
+    revenue_distributor = row[12]
+    distributor.revenue += int(revenue_distributor)
+    cost_distributor = row[13]
+    distributor.cost += int(cost_distributor)
+
+
+# Open revenue CSV and read everything into memory
+with open(sys.argv[1], "r", encoding='shift_jis') as database:
+    revenue_data = csv.reader(database)
+
+    # Skip first row (description)
+    next(revenue_data)
+
+    # Assign values into corresponding property for each distributors
+    # row[0] : "distributor"
+    # row[12] : "revenue"
+    # row[13] : "cost"
+    
+    for row in revenue_data:
+
+        # "m" distributor
+        if row[0] == "10590|M":    
+            update(m)
+        
+        elif row[0] == "10601|T":    
+            update(t)
+
+        elif row[0] == "ｴ9905|N":    
+            update(n)
+        
+        else:
+            update(o)
+    
+    total_revenue = m.revenue + t.revenue + n.revenue + o.revenue
+
+    print(f"m revenue:{m.revenue}, t revenue:{t.revenue}, n revenue:{n.revenue}, o revenue:{o.revenue}, total revenue:{total_revenue}")
 
 
 # Loop every row of CSV
