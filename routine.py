@@ -108,7 +108,7 @@ class Region(MonthlyPerformance):
     pass
 
 # Create Object for Region
-region_monthly_performance = Region("region_total_revenue", 0, 0, 0, 0, 0)
+region_monthly_performance = Region("region_monthly_performance", 0, 0, 0, 0, 0)
 
 # Function for updating distributors' Revenue & Cost
 def update_revenue_and_cost(target_object):
@@ -147,7 +147,7 @@ def format_value_with_percentage(original_value):
 
 
 # Open revenue CSV and read everything into memory
-with open(sys.argv[1], "r", encoding='shift_jis') as database:
+with open(sys.argv[1], "r", encoding="shift_jis") as database:
 
     # row[0] : "distributor"
     # row[12] : "revenue"
@@ -171,16 +171,12 @@ with open(sys.argv[1], "r", encoding='shift_jis') as database:
         
         else:
             update_revenue_and_cost(o_monthly_performance)
-    
-    total_revenue = m_monthly_performance.revenue + t_monthly_performance.revenue + n_monthly_performance.revenue + o_monthly_performance.revenue
-    total_cost = m_monthly_performance.cost + t_monthly_performance.cost + n_monthly_performance.cost + o_monthly_performance.cost
 
     print(f"""
     m_monthly_performance revenue:{m_monthly_performance.revenue}
     t_monthly_performance revenue:{t_monthly_performance.revenue} 
     n_monthly_performance revenue:{n_monthly_performance.revenue} 
     o_monthly_performance revenue:{o_monthly_performance.revenue} 
-    total revenue:{total_revenue}
     """)
 
     print(f""" 
@@ -188,7 +184,6 @@ with open(sys.argv[1], "r", encoding='shift_jis') as database:
     t_monthly_performance cost:{t_monthly_performance.cost} 
     n_monthly_performance cost:{n_monthly_performance.cost} 
     o_monthly_performance cost:{o_monthly_performance.cost} 
-    total cost:{total_cost}
     """)
 
     all_distributor_list = [m_monthly_performance, t_monthly_performance, n_monthly_performance, o_monthly_performance] # List guaranteed to be iterated in order
@@ -197,43 +192,63 @@ with open(sys.argv[1], "r", encoding='shift_jis') as database:
     for distributor in all_distributor_list:
         
         print(distributor)
+
         # Compute distributors' Net sales
-        net_sales = compute_net_sales(distributor)
+        distributor_net_sales = compute_net_sales(distributor)
 
         # Update distributors' Net sales
-        update_net_sales(distributor, net_sales)
+        update_net_sales(distributor, distributor_net_sales)
 
-        print(net_sales)
+        print(distributor_net_sales)
         print(distributor.net_sales)
 
-        # Compute Net profit margin
+        # Compute distributtors' Net profit margin
         distributor_net_profit_margin_non_percentage = compute_net_profit_margin(distributor)
 
         # Format value with percentage
-        net_profit_margin = format_value_with_percentage(distributor_net_profit_margin_non_percentage)
+        distsributor_net_profit_margin = format_value_with_percentage(distributor_net_profit_margin_non_percentage)
 
         # Update distributors' Net profit margin
-        update_net_profit_margin(distributor, net_profit_margin)
+        update_net_profit_margin(distributor, distsributor_net_profit_margin)
 
 
-        print(net_profit_margin)
+        print(distsributor_net_profit_margin)
         print(distributor.net_profit_margin)
 
-        # Compute Monthly total Booking & Revenue
+    # Compute Monthly total Booking & Revenue 
+     
+    # Seek the beginning of csv file
+    database.seek(0)
 
-        for row in revenue_data:
+    # Skip first row (Description row)
+    next(revenue_data)
+
+    print(region_monthly_performance)
+    
+    for row in revenue_data:
+
+        update_revenue_and_cost(region_monthly_performance)
+    
+    # Compute Region's Net sales
+    region_net_sales = compute_net_sales(region_monthly_performance)
+
+    # Update Region's Net sales
+    update_net_sales(region_monthly_performance, region_net_sales)
+
+    # Compute Region's Net profit margin
+    region_net_profit_margin_non_percentage = compute_net_profit_margin(region_monthly_performance)
+
+    # Format value with percentage
+    region_net_profit_margin = format_value_with_percentage(region_net_profit_margin_non_percentage)
+
+    # Update Region's Net profit margin
+    update_net_profit_margin(region_monthly_performance, region_net_profit_margin)
+
+    print(region_monthly_performance.revenue) 
+    print(region_monthly_performance.cost) 
+    print(region_monthly_performance.net_profit_margin)
     
 
-        # -Loop every revenue, cost amount row of revenue CSV
-        #     -update revenue's total_amount, cost property
-
-        # -Compute Net sales data
-        #     -Net sales data = Revenue - Cost
-        #     -update revenue's Net sales data property
-
-        # -Compute Net profit margin
-        #     -Net profit margin = Net sales data / total_revenue
-        #     -Assign Net profit margin by modifying Net profit margin properties
             
         # -Loop every booking amount row of booking CSV
         #     -update booking's total_amount property
