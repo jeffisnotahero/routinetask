@@ -15,10 +15,10 @@ class MonthlyPerformance:
 
         print(f"""
         {self.name}\n
-        Booking:            {self.booking} 
-        Revenue:            {self.revenue} 
-        Cost:               {self.cost} 
-        Net sales:          {self.net_sales}
+        Booking:            {self.booking:,} 
+        Revenue:            {self.revenue:,} 
+        Cost:               {self.cost:,} 
+        Net sales:          {self.net_sales:,}
         Net profit margin:  {self.net_profit_margin}\n
         """, end='')
 
