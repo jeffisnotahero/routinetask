@@ -15,7 +15,6 @@ class MonthlyPerformance:
 class Distributor(MonthlyPerformance):
     pass
 
-
 # Create Child class (Region)
 class Region(MonthlyPerformance):
     pass

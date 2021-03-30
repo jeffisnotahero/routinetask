@@ -1,4 +1,4 @@
-Logic & pseudocode
+Logic & pseudocode (29 Mar 2021)
 
     //Compute 3 distributors & Other's data//
     -Open revenue CSV and read everything into memory
