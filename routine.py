@@ -22,7 +22,8 @@
     # -Open revenue CSV and read everything into memory
     # -Open booking CSV and read everything into memory
 
-    # -Create distributor Class for 3 distributors & Other with Booking, Revenue, Cost, Net sales, Net profit margin properties
+    # -Create Parent class for Booking, Revenue, Cost, Net sales, Net profit margin properties
+    # -Create child Class for 3 distributors & Other with Booking, Revenue, Cost, Net sales, Net profit margin properties
     # -Create Object for 3 distributors & Other
     # -Loop every row of CSV
     #     -if A distributors
@@ -51,7 +52,6 @@
 
     #  //Compute Monthly total Booking & Revenue//
 
-    # -Create monthly_performance Parent Class with total_amount, cost, Net profit, Net profit margin properties
     # -Create revenue & booking Child Class
     # -Create Object for revenue & booking
 
@@ -80,8 +80,8 @@ if len(sys.argv) != 2:
     print("Usage: python routine.py 'YOUR CSV'.csv")
     sys.exit(1)
 
-# Create Distributor class
-class Distributor:
+# Create Parent class
+class MonthlyPerformance:
     def __init__(self, name, booking, revenue, cost, net_sales, net_profit_margin):
         self.name = name
         self.booking = booking
@@ -93,11 +93,22 @@ class Distributor:
     def __repr__(self):
         return self.name
 
+# Create Child class (Distributor)
+class Distributor(MonthlyPerformance):
+    pass
+
 # Create Object for 3 distributors & Other
-m = Distributor("m", 0, 0, 0, 0, 0)
-t = Distributor("t", 0, 0, 0, 0, 0)
-n = Distributor("n", 0, 0, 0, 0, 0)
-o = Distributor("o", 0, 0, 0, 0, 0)
+m_monthly_performance = Distributor("m_monthly_performance", 0, 0, 0, 0, 0)
+t_monthly_performance = Distributor("t_monthly_performance", 0, 0, 0, 0, 0)
+n_monthly_performance = Distributor("n_monthly_performance", 0, 0, 0, 0, 0)
+o_monthly_performance = Distributor("o_monthly_performance", 0, 0, 0, 0, 0)
+
+# Create Child class (Region)
+class Region(MonthlyPerformance):
+    pass
+
+# Create Object for Region
+region_monthly_performance = Region("region_total_revenue", 0, 0, 0, 0, 0)
 
 # Function for updating distributors' Revenue & Cost
 def update_distributor_revenue_and_cost(distributor):
@@ -149,40 +160,40 @@ with open(sys.argv[1], "r", encoding='shift_jis') as database:
     
     for row in revenue_data:
 
-        # "m" distributor
+        # "m_monthly_performance" distributor
         if row[0] == "10590|M":    
-            update_distributor_revenue_and_cost(m)
+            update_distributor_revenue_and_cost(m_monthly_performance)
         
         elif row[0] == "10601|T":    
-            update_distributor_revenue_and_cost(t)
+            update_distributor_revenue_and_cost(t_monthly_performance)
 
         elif row[0] == "ｴ9905|N":    
-            update_distributor_revenue_and_cost(n)
+            update_distributor_revenue_and_cost(n_monthly_performance)
         
         else:
-            update_distributor_revenue_and_cost(o)
+            update_distributor_revenue_and_cost(o_monthly_performance)
     
-    total_revenue = m.revenue + t.revenue + n.revenue + o.revenue
-    total_cost = m.cost + t.cost + n.cost + o.cost
+    total_revenue = m_monthly_performance.revenue + t_monthly_performance.revenue + n_monthly_performance.revenue + o_monthly_performance.revenue
+    total_cost = m_monthly_performance.cost + t_monthly_performance.cost + n_monthly_performance.cost + o_monthly_performance.cost
 
     print("hello")
     print(f"""
-    m revenue:{m.revenue}
-    t revenue:{t.revenue} 
-    n revenue:{n.revenue} 
-    o revenue:{o.revenue} 
+    m_monthly_performance revenue:{m_monthly_performance.revenue}
+    t_monthly_performance revenue:{t_monthly_performance.revenue} 
+    n_monthly_performance revenue:{n_monthly_performance.revenue} 
+    o_monthly_performance revenue:{o_monthly_performance.revenue} 
     total revenue:{total_revenue}
     """)
 
     print(f""" 
-    m cost:{m.cost}
-    t cost:{t.cost} 
-    n cost:{n.cost} 
-    o cost:{o.cost} 
+    m_monthly_performance cost:{m_monthly_performance.cost}
+    t_monthly_performance cost:{t_monthly_performance.cost} 
+    n_monthly_performance cost:{n_monthly_performance.cost} 
+    o_monthly_performance cost:{o_monthly_performance.cost} 
     total cost:{total_cost}
     """)
 
-    all_distributor_list = [m, t, n, o] # List guaranteed to be iterated in order
+    all_distributor_list = [m_monthly_performance, t_monthly_performance, n_monthly_performance, o_monthly_performance] # List guaranteed to be iterated in order
 
     # Compute each distributors' Net sales data & Net profit margin
     for distributor in all_distributor_list:
@@ -210,4 +221,23 @@ with open(sys.argv[1], "r", encoding='shift_jis') as database:
         print(distributor_net_profit_margin)
         print(distributor.net_profit_margin)
 
+        # Compute Monthly total Booking & Revenue
+
+
+    # -Create Object for revenue & booking
+
+    # -Loop every revenue, cost amount row of revenue CSV
+    #     -update revenue's total_amount, cost property
+
+    # -Compute Net sales data
+    #     -Net sales data = Revenue - Cost
+    #     -update revenue's Net sales data property
+
+    # -Compute Net profit margin
+    #     -Net profit margin = Net sales data / total_revenue
+    #     -Assign Net profit margin by modifying Net profit margin properties
         
+    # -Loop every booking amount row of booking CSV
+    #     -update booking's total_amount property
+    
+    # -Print out all monthly Booking & Revenue's total amount, cost, Net sales data & Net profit margin
