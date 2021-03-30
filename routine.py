@@ -2,7 +2,7 @@
 # Description: Automate routine task from work
 
 # <Features>
-# 1. Compute data and display as output as below
+# 1. Compute data, output to new csv file and display as output as below
 #     1. 3 Distributors & Other's
 #         1. Booking data
 #         2. Revenue data
@@ -52,45 +52,28 @@ with open(sys.argv[1], "r", encoding="shift_jis") as database:
     for row in list_revenue_data:
 
         # Update each distributors' data
-        if row[0] == "10590|M":    
+        if row[0] == "10590|Maintech":    
             update_revenue_and_cost(m_monthly_performance, row)
         
-        elif row[0] == "10601|T":    
+        elif row[0] == "10601|TST":    
             update_revenue_and_cost(t_monthly_performance, row)
 
-        elif row[0] == "ｴ9905|N":    
+        elif row[0] == "ｴ9905|N.C. Tech":    
             update_revenue_and_cost(n_monthly_performance, row)
         
         else:
             update_revenue_and_cost(o_monthly_performance, row)
 
-    print(f"""
-    m_monthly_performance revenue:{m_monthly_performance.revenue}
-    t_monthly_performance revenue:{t_monthly_performance.revenue} 
-    n_monthly_performance revenue:{n_monthly_performance.revenue} 
-    o_monthly_performance revenue:{o_monthly_performance.revenue} 
-    
-    m_monthly_performance cost:{m_monthly_performance.cost}
-    t_monthly_performance cost:{t_monthly_performance.cost} 
-    n_monthly_performance cost:{n_monthly_performance.cost} 
-    o_monthly_performance cost:{o_monthly_performance.cost} 
-    """)
-
     all_distributor_list = [m_monthly_performance, t_monthly_performance, n_monthly_performance, o_monthly_performance] # List guaranteed to be iterated in order
 
     # Compute each distributors' Net sales data & Net profit margin
     for distributor in all_distributor_list:
-        
-        print(distributor)
 
         # Compute distributors' Net sales
         distributor_net_sales = compute_net_sales(distributor)
 
         # Update distributors' Net sales
         update_net_sales(distributor, distributor_net_sales)
-
-        print(distributor_net_sales)
-        print(distributor.net_sales)
 
         # Compute distributtors' Net profit margin
         distributor_net_profit_margin_non_percentage = compute_net_profit_margin(distributor)
@@ -100,10 +83,6 @@ with open(sys.argv[1], "r", encoding="shift_jis") as database:
 
         # Update distributors' Net profit margin
         update_net_profit_margin(distributor, distsributor_net_profit_margin)
-
-
-        print(distsributor_net_profit_margin)
-        print(distributor.net_profit_margin)
 
     # Compute Region Monthly Total Booking
     for row in list_revenue_data:
@@ -124,10 +103,6 @@ with open(sys.argv[1], "r", encoding="shift_jis") as database:
 
     # Update Region's Net profit margin
     update_net_profit_margin(region_monthly_performance, region_net_profit_margin)
-
-    print(region_monthly_performance.revenue) 
-    print(region_monthly_performance.cost) 
-    print(region_monthly_performance.net_profit_margin)
 
 # Open booking CSV and read everything into memory
 with open(sys.argv[2], "r", encoding="shift_jis") as database:
@@ -158,22 +133,14 @@ with open(sys.argv[2], "r", encoding="shift_jis") as database:
         else:
             update_booking(o_monthly_performance, row)
 
-    print(f"""
-    m_monthly_performance booking:{m_monthly_performance.booking}
-    t_monthly_performance booking:{t_monthly_performance.booking} 
-    n_monthly_performance booking:{n_monthly_performance.booking} 
-    o_monthly_performance booking:{o_monthly_performance.booking} 
-    """)
-
     # Compute Region Monthly Total Booking
     for row in list_booking_data:
 
         update_booking(region_monthly_performance, row)
     
-    print(region_monthly_performance.booking)
-    
-    
-    # -Loop every booking amount row of booking CSV
-    #     -update booking's total_amount property
-        
-    # -Print out all monthly Booking & Revenue's total amount, cost, Net sales data & Net profit margin
+    # Print Region & Distributors' data
+    region_monthly_performance.print()
+    m_monthly_performance.print()
+    t_monthly_performance.print()
+    n_monthly_performance.print()
+    o_monthly_performance.print()

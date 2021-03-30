@@ -11,6 +11,18 @@ class MonthlyPerformance:
     def __repr__(self):
         return self.name
 
+    def print(self):
+
+        print(f"""
+        {self.name}\n
+        Booking:            {self.booking} 
+        Revenue:            {self.revenue} 
+        Cost:               {self.cost} 
+        Net sales:          {self.net_sales}
+        Net profit margin:  {self.net_profit_margin}\n
+        """, end='')
+
+
 # Create Child class (Distributor)
 class Distributor(MonthlyPerformance):
     pass
