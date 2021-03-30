@@ -111,35 +111,35 @@ class Region(MonthlyPerformance):
 region_monthly_performance = Region("region_total_revenue", 0, 0, 0, 0, 0)
 
 # Function for updating distributors' Revenue & Cost
-def update_distributor_revenue_and_cost(distributor):
-    revenue_distributor = row[12]
-    distributor.revenue += int(revenue_distributor)
-    cost_distributor = row[13]
-    distributor.cost += int(cost_distributor)
+def update_revenue_and_cost(target_object):
+    revenue = row[12]
+    target_object.revenue += int(revenue)
+    cost = row[13]
+    target_object.cost += int(cost)
 
 # Function for updating distributors' Net sales
-def update_distributor_net_sales(distributor, distributor_net_sales):
-    distributor.net_sales = distributor_net_sales
+def update_net_sales(target_object, net_sales):
+    target_object.net_sales = net_sales
 
 # Function for updating distributor's Net profit margin
-def update_distributor_net_profit_margin(distributor, distributor_profit_margin):
-    distributor.net_profit_margin = distributor_profit_margin
+def update_net_profit_margin(target_object, profit_margin):
+    target_object.net_profit_margin = profit_margin
 
 # Function for computing distributors' Net sales
-def compute_distributor_net_sales(distributor):
-    distributor_net_sales = distributor.revenue - distributor.cost
-    return distributor_net_sales
+def compute_net_sales(target_object):
+    net_sales = target_object.revenue - target_object.cost
+    return net_sales
 
 # Function for computing distributors' Net profit margin
-def compute_distributor_net_profit_margin(distributor):
+def compute_net_profit_margin(target_object):
 
     # Check if division by zero (aka distributor.revenue == 0)
-    if distributor.revenue == 0:
-        distributor_net_profit_margin = 0
-        return distributor_net_profit_margin
+    if target_object.revenue == 0:
+        net_profit_margin = 0
+        return net_profit_margin
     else:
-        distributor_net_profit_margin = distributor.net_sales / distributor.revenue
-        return distributor_net_profit_margin
+        net_profit_margin = target_object.net_sales / target_object.revenue
+        return net_profit_margin
 
 def format_value_with_percentage(original_value):
     percentage_value = "{0:.2%}".format(original_value)
@@ -148,35 +148,33 @@ def format_value_with_percentage(original_value):
 
 # Open revenue CSV and read everything into memory
 with open(sys.argv[1], "r", encoding='shift_jis') as database:
+
+    # row[0] : "distributor"
+    # row[12] : "revenue"
+    # row[13] : "cost"
     revenue_data = csv.reader(database)
 
     # Skip first row (Description row)
     next(revenue_data)
-
-    # Assign values into corresponding property for each distributors
-    # row[0] : "distributor"
-    # row[12] : "revenue"
-    # row[13] : "cost"
     
     for row in revenue_data:
 
         # "m_monthly_performance" distributor
         if row[0] == "10590|M":    
-            update_distributor_revenue_and_cost(m_monthly_performance)
+            update_revenue_and_cost(m_monthly_performance)
         
         elif row[0] == "10601|T":    
-            update_distributor_revenue_and_cost(t_monthly_performance)
+            update_revenue_and_cost(t_monthly_performance)
 
         elif row[0] == "ｴ9905|N":    
-            update_distributor_revenue_and_cost(n_monthly_performance)
+            update_revenue_and_cost(n_monthly_performance)
         
         else:
-            update_distributor_revenue_and_cost(o_monthly_performance)
+            update_revenue_and_cost(o_monthly_performance)
     
     total_revenue = m_monthly_performance.revenue + t_monthly_performance.revenue + n_monthly_performance.revenue + o_monthly_performance.revenue
     total_cost = m_monthly_performance.cost + t_monthly_performance.cost + n_monthly_performance.cost + o_monthly_performance.cost
 
-    print("hello")
     print(f"""
     m_monthly_performance revenue:{m_monthly_performance.revenue}
     t_monthly_performance revenue:{t_monthly_performance.revenue} 
@@ -200,44 +198,44 @@ with open(sys.argv[1], "r", encoding='shift_jis') as database:
         
         print(distributor)
         # Compute distributors' Net sales
-        distributor_net_sales = compute_distributor_net_sales(distributor)
+        net_sales = compute_net_sales(distributor)
 
         # Update distributors' Net sales
-        update_distributor_net_sales(distributor, distributor_net_sales)
+        update_net_sales(distributor, net_sales)
 
-        print(distributor_net_sales)
+        print(net_sales)
         print(distributor.net_sales)
 
         # Compute Net profit margin
-        distributor_net_profit_margin_non_percentage = compute_distributor_net_profit_margin(distributor)
+        distributor_net_profit_margin_non_percentage = compute_net_profit_margin(distributor)
 
         # Format value with percentage
-        distributor_net_profit_margin = format_value_with_percentage(distributor_net_profit_margin_non_percentage)
+        net_profit_margin = format_value_with_percentage(distributor_net_profit_margin_non_percentage)
 
         # Update distributors' Net profit margin
-        update_distributor_net_profit_margin(distributor, distributor_net_profit_margin)
+        update_net_profit_margin(distributor, net_profit_margin)
 
 
-        print(distributor_net_profit_margin)
+        print(net_profit_margin)
         print(distributor.net_profit_margin)
 
         # Compute Monthly total Booking & Revenue
 
-
-    # -Create Object for revenue & booking
-
-    # -Loop every revenue, cost amount row of revenue CSV
-    #     -update revenue's total_amount, cost property
-
-    # -Compute Net sales data
-    #     -Net sales data = Revenue - Cost
-    #     -update revenue's Net sales data property
-
-    # -Compute Net profit margin
-    #     -Net profit margin = Net sales data / total_revenue
-    #     -Assign Net profit margin by modifying Net profit margin properties
-        
-    # -Loop every booking amount row of booking CSV
-    #     -update booking's total_amount property
+        for row in revenue_data:
     
-    # -Print out all monthly Booking & Revenue's total amount, cost, Net sales data & Net profit margin
+
+        # -Loop every revenue, cost amount row of revenue CSV
+        #     -update revenue's total_amount, cost property
+
+        # -Compute Net sales data
+        #     -Net sales data = Revenue - Cost
+        #     -update revenue's Net sales data property
+
+        # -Compute Net profit margin
+        #     -Net profit margin = Net sales data / total_revenue
+        #     -Assign Net profit margin by modifying Net profit margin properties
+            
+        # -Loop every booking amount row of booking CSV
+        #     -update booking's total_amount property
+        
+        # -Print out all monthly Booking & Revenue's total amount, cost, Net sales data & Net profit margin
