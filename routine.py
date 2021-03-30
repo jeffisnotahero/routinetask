@@ -16,15 +16,14 @@
 #         3. Net profit margin
 # 2. Check if there is date (出荷日) later than current date when the data downloaded, or current date  in the table
 
-
 import csv
 import sys
 from helper import *
 
 # Check command-line argument
 # 1st argv => csv
-if len(sys.argv) != 2:
-    print("Usage: python routine.py 'YOUR CSV'.csv")
+if len(sys.argv) != 3:
+    print("Usage: python routine.py 'YOUR REVENUE CSV'.csv 'YOUR BOOKING CSV'.csv ----MUST FOLLOW THE ORDER OF CSV FILE!!!----")
     sys.exit(1)
 
 # Create Object for 3 distributors & Other
@@ -106,10 +105,7 @@ with open(sys.argv[1], "r", encoding="shift_jis") as database:
         print(distsributor_net_profit_margin)
         print(distributor.net_profit_margin)
 
-    # Compute Region Monthly Total Booking & Revenue 
-
-    print(region_monthly_performance)
-    
+    # Compute Region Monthly Total Booking
     for row in list_revenue_data:
 
         update_revenue_and_cost(region_monthly_performance, row)
@@ -132,9 +128,51 @@ with open(sys.argv[1], "r", encoding="shift_jis") as database:
     print(region_monthly_performance.revenue) 
     print(region_monthly_performance.cost) 
     print(region_monthly_performance.net_profit_margin)
+
+# Open booking CSV and read everything into memory
+with open(sys.argv[2], "r", encoding="shift_jis") as database:
+
+    # row[0] : "distributor"
+    # row[12] : "booking"
+    # row[13] : "cost"
+    booking_data = csv.reader(database)
+
+    # Skip first row (Description row)
+    next(booking_data)
+
+    list_booking_data = list(booking_data)
+
+    # Compute Monthly Distributors' Revenue & Cost data
+    for row in list_booking_data:
+
+        # Update each distributors' data
+        if row[0] == "10590|Maintech":    
+            update_booking(m_monthly_performance, row)
+        
+        elif row[0] == "10601|TST":    
+            update_booking(t_monthly_performance, row)
+
+        elif row[0] == "ｴ9905|N.C. Tech":    
+            update_booking(n_monthly_performance, row)
+        
+        else:
+            update_booking(o_monthly_performance, row)
+
+    print(f"""
+    m_monthly_performance booking:{m_monthly_performance.booking}
+    t_monthly_performance booking:{t_monthly_performance.booking} 
+    n_monthly_performance booking:{n_monthly_performance.booking} 
+    o_monthly_performance booking:{o_monthly_performance.booking} 
+    """)
+
+    # Compute Region Monthly Total Booking
+    for row in list_booking_data:
+
+        update_booking(region_monthly_performance, row)
     
-
-
+    print(region_monthly_performance.booking)
+    
+    
     # -Loop every booking amount row of booking CSV
     #     -update booking's total_amount property
         
