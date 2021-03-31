@@ -25,12 +25,17 @@ if len(sys.argv) != 3:
     print("Usage: python routine.py 'YOUR REVENUE CSV'.csv 'YOUR BOOKING CSV'.csv ----MUST FOLLOW THE ORDER OF INPUT OF CSV FILE!!!----")
     sys.exit(1)
 
-# Create Object for 3 distributors & Other & Region
-m_monthly_performance = Distributor("m_monthly_performance")
-t_monthly_performance = Distributor("t_monthly_performance")
-n_monthly_performance = Distributor("n_monthly_performance")
-o_monthly_performance = Distributor("o_monthly_performance")
-region_monthly_performance = Region("region_monthly_performance")
+# Create name list
+name_list = create_name_list(sys.argv[1], sys.argv[2])
+
+# Create distributor list
+distributor_list = []
+
+for name in name_list:
+    distributor_list.append(Distributor(name))
+
+# Region monthly performance object
+region_monthly_performance = Region("Region_monthly_performance")
 
 # Open revenue CSV and read everything into memory
 with open(sys.argv[1], "r", encoding="shift_jis") as database:
@@ -40,31 +45,20 @@ with open(sys.argv[1], "r", encoding="shift_jis") as database:
     # row[13] : "cost"
     revenue_data = csv.reader(database)
 
-    # Skip first row (Description row)
-    next(revenue_data)
-
-    list_revenue_data = list(revenue_data)
+    next(revenue_data) # Skip first row (Description row)
+    list_revenue_data = list(revenue_data) # Convert csv data to list 
     
     # Compute Monthly Distributors' Revenue & Cost data
-    for row in list_revenue_data:
+    for distributor in distributor_list:
 
-        # Update each distributors' data
-        if row[0] == "10590|Maintech":    
-            update_revenue_and_cost(m_monthly_performance, row)
-        
-        elif row[0] == "10601|TST":    
-            update_revenue_and_cost(t_monthly_performance, row)
+        for row in list_revenue_data:
 
-        elif row[0] == "ｴ9905|N.C. Tech":    
-            update_revenue_and_cost(n_monthly_performance, row)
-        
-        else:
-            update_revenue_and_cost(o_monthly_performance, row)
-
-    all_distributor_list = [m_monthly_performance, t_monthly_performance, n_monthly_performance, o_monthly_performance] # List guaranteed to be iterated in order
+            # Update each distributors' data
+            if row[0] == distributor.name:    
+                update_revenue_and_cost(distributor, row)
 
     # Compute each distributors' Net sales data & Net profit margin
-    for distributor in all_distributor_list:
+    for distributor in distributor_list:
 
         distributor_net_sales = compute_net_sales(distributor) # Compute distributors' Net sales
         update_net_sales(distributor, distributor_net_sales) # Update distributors' Net sales
@@ -92,36 +86,25 @@ with open(sys.argv[2], "r", encoding="shift_jis") as database:
     # row[12] : "booking"
     # row[13] : "cost"
     booking_data = csv.reader(database)
-
-    # Skip first row (Description row)
     next(booking_data)
-
     list_booking_data = list(booking_data)
 
     # Compute Monthly Distributors' Revenue & Cost data
-    for row in list_booking_data:
+    for distributor in distributor_list:
 
-        # Update each distributors' data
-        if row[0] == "10590|Maintech":    
-            update_booking(m_monthly_performance, row)
-        
-        elif row[0] == "10601|TST":    
-            update_booking(t_monthly_performance, row)
+        for row in list_booking_data:
 
-        elif row[0] == "ｴ9905|N.C. Tech":    
-            update_booking(n_monthly_performance, row)
-        
-        else:
-            update_booking(o_monthly_performance, row)
+            # Update each distributors' data
+            if row[0] == distributor.name:    
+                update_booking(distributor, row)
 
     # Compute Region Monthly Total Booking
     for row in list_booking_data:
 
         update_booking(region_monthly_performance, row)
-    
-    # Print Region & Distributors' data
-    region_monthly_performance.print_info()
-    m_monthly_performance.print_info()
-    t_monthly_performance.print_info()
-    n_monthly_performance.print_info()
-    o_monthly_performance.print_info()
+
+# Print all region & distributor info
+for distributor in distributor_list:
+    distributor.print_info()
+
+region_monthly_performance.print_info()
