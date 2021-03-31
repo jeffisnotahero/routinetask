@@ -22,15 +22,15 @@ from helper import *
 
 # Check command-line argument
 if len(sys.argv) != 3:
-    print("Usage: python routine.py 'YOUR REVENUE CSV'.csv 'YOUR BOOKING CSV'.csv ----MUST FOLLOW THE ORDER OF CSV FILE!!!----")
+    print("Usage: python routine.py 'YOUR REVENUE CSV'.csv 'YOUR BOOKING CSV'.csv ----MUST FOLLOW THE ORDER OF INPUT OF CSV FILE!!!----")
     sys.exit(1)
 
 # Create Object for 3 distributors & Other & Region
-m_monthly_performance = Distributor("m_monthly_performance", 0, 0, 0, 0, 0)
-t_monthly_performance = Distributor("t_monthly_performance", 0, 0, 0, 0, 0)
-n_monthly_performance = Distributor("n_monthly_performance", 0, 0, 0, 0, 0)
-o_monthly_performance = Distributor("o_monthly_performance", 0, 0, 0, 0, 0)
-region_monthly_performance = Region("region_monthly_performance", 0, 0, 0, 0, 0)
+m_monthly_performance = Distributor("m_monthly_performance")
+t_monthly_performance = Distributor("t_monthly_performance")
+n_monthly_performance = Distributor("n_monthly_performance")
+o_monthly_performance = Distributor("o_monthly_performance")
+region_monthly_performance = Region("region_monthly_performance")
 
 # Open revenue CSV and read everything into memory
 with open(sys.argv[1], "r", encoding="shift_jis") as database:
@@ -120,8 +120,8 @@ with open(sys.argv[2], "r", encoding="shift_jis") as database:
         update_booking(region_monthly_performance, row)
     
     # Print Region & Distributors' data
-    region_monthly_performance.print()
-    m_monthly_performance.print()
-    t_monthly_performance.print()
-    n_monthly_performance.print()
-    o_monthly_performance.print()
+    region_monthly_performance.print_info()
+    m_monthly_performance.print_info()
+    t_monthly_performance.print_info()
+    n_monthly_performance.print_info()
+    o_monthly_performance.print_info()

@@ -1,6 +1,6 @@
 # Parent Class
 class MonthlyPerformance:
-    def __init__(self, name, booking, revenue, cost, net_sales, net_profit_margin):
+    def __init__(self, name, booking=0, revenue=0, cost=0, net_sales=0, net_profit_margin=0):
         self.name = name
         self.booking = booking
         self.revenue = revenue
@@ -11,7 +11,7 @@ class MonthlyPerformance:
     def __repr__(self):
         return self.name
 
-    def print(self):
+    def print_info(self):
 
         print(f"""
         {self.name}\n
