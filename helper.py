@@ -1,6 +1,6 @@
 import csv
 
-# Parent Class
+# Parent Class Monthly Performance
 class MonthlyPerformance:
     def __init__(self, name, booking=0, revenue=0, cost=0, net_sales=0, net_profit_margin=0):
         self.name = name

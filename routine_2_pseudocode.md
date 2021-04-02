@@ -7,6 +7,7 @@
     -item.name
     -item.unit
     -item.estimated
+    -item.cost
     -item.boolean.check_if_in_discount_price_list =default true
     -item.boolean.check_if_in_normal_price_list =default true
 
@@ -20,7 +21,8 @@
 -import delivery data
     -create a product name list
 
--create item list
+-create item list and objects 
+-add units to each item from list
 
 // check every item could be priced with discount list and normal list and label it
 -loop the item list 
@@ -37,25 +39,26 @@
 // action taken in prior for what if there is items cannot be priced in normal price list
 -loop the item list
     -show how many are there
-    -prompt user to provide input(estimated) for those items amd update those item
+    -prompt user to provide input(estimated) & cost for those items amd update those item
 
--compute total revenue as of now
+-compute total revenue & cost as of now
 
 // prompt decision before compute final data
 -loop item list
+
     -if there is item.booleam.check_if_in_discount_price_false
         -print how many are there and those info
         -prompt user if they want compute those with normal price or not and show output
             -if true
-                -loop normal price and compute estimated and update those item estimated
+                -loop normal price and compute estimated & cost and update those item estimated & cost
 
-                -loop items list, sum total revenue and delivery amount and show output
+                -loop items list, sum total revenue and delivery amount, compute net profit margin and show output
             -else
-                -loop item list, sum delivery amount (item boolean check = true) and show output
+                -loop item list, sum delivery amount (item boolean check = true), compute net profit margin and show output
                 -print those item that not existed in the discount list
     
     -else
-        -loop item list, sum every delivery amount (item boolean check = true) and show output
+        -loop item list, sum every delivery amount (item boolean check = true), compute net profit margin and show output
         -print those item
         -print all items in discount list
 
