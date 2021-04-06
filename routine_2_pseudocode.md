@@ -49,7 +49,7 @@ if counter = 0:
     sum total revenue & deliverables
 
 else:
-    // action taken in prior for what if there is items cannot be priced in normal price list
+    // Check if item.booleam.check_if_in_normal_price_false and
     -loop the item list
         -show how many are there
         -prompt user to provide input(estimated) & cost for those items amd update those item OR skip
@@ -89,7 +89,7 @@ else:
             -loop item list
                 -if item is in discount list true
                     -deliverables += item.estimated
-                    
+
         - total expected deliverable = deliverables + total revenue
 
 

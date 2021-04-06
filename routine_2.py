@@ -144,76 +144,86 @@ with open("specialpricelist.csv", "r") as discount_price_list_database, open("no
         # for product_from_normal_list in normal_price_list:
         #     print (product_from_normal_list[2],product_from_normal_list[1])
 
-# // action taken in prior for what if there is items cannot be priced in normal price list
-
-# # Show user the items that without the normal price
-# for product in item_list:
-
-#     if product.in_normal_price_list == False:
-#         product.print_info()
-
-# user_input = input("Plug in normal price? y for go, n for nah\n")
-
-# if user_input == "y":
-
-#     # Prompt user for normal price input for those product
-#     for product in item_list:
-
-#         if product.in_normal_price_list == False:
-#             print("Plug in normal price for", product.model, "?")
-#             estimated_normal_price = float(input("normal price:"))
-#             product.normal_price = estimated_normal_price
+## compute total revenue & cost as of now
 
 # Region monthly performance object
 region_monthly_performance = Region("Region_monthly_performance")
 
-# Open revenue CSV and read everything into memory
-# with open("revenue.csv", "r", encoding="shift_jis") as database:
+Open revenue CSV and read everything into memory
+with open("revenue.csv", "r", encoding="shift_jis") as database:
 
-#     # row[0] : "distributor"
-#     # row[12] : "revenue"
-#     # row[13] : "cost"
-#     revenue_data = csv.reader(database)
+    # row[0] : "distributor"
+    # row[12] : "revenue"
+    # row[13] : "cost"
+    revenue_data = csv.reader(database)
 
-#     next(revenue_data) # Skip first row (Description row)
-#     list_revenue_data = list(revenue_data) # Convert csv data to list 
+    next(revenue_data) # Skip first row (Description row)
+    list_revenue_data = list(revenue_data) # Convert csv data to list 
 
-#     # Compute Region Monthly Total Booking
-#     for row in list_revenue_data:
+    # Compute Region Monthly Total Booking
+    for row in list_revenue_data:
 
-#         update_revenue_and_cost(region_monthly_performance, row)
+        update_revenue_and_cost(region_monthly_performance, row)
     
-#     region_net_sales = compute_net_sales(region_monthly_performance) # Compute Region's Net sales
-#     update_net_sales(region_monthly_performance, region_net_sales) # Update Region's Net sales
+    region_net_sales = compute_net_sales(region_monthly_performance) # Compute Region's Net sales
+    update_net_sales(region_monthly_performance, region_net_sales) # Update Region's Net sales
 
-#     region_net_profit_margin_non_percentage = compute_net_profit_margin(region_monthly_performance) # Compute Region's Net profit margin
-#     region_net_profit_margin = format_value_with_percentage(region_net_profit_margin_non_percentage) # Format value with percentage
-#     update_net_profit_margin(region_monthly_performance, region_net_profit_margin) # Update Region's Net profit margin
+    region_net_profit_margin_non_percentage = compute_net_profit_margin(region_monthly_performance) # Compute Region's Net profit margin
+    region_net_profit_margin = format_value_with_percentage(region_net_profit_margin_non_percentage) # Format value with percentage
+    update_net_profit_margin(region_monthly_performance, region_net_profit_margin) # Update Region's Net profit margin
 
-# region_monthly_performance.print_info()
+region_monthly_performance.print_info()
 
-
-
-
-
-# // prompt decision before compute final data
-# -loop item list
-
-#     -if there is item.booleam.check_if_in_discount_price_false
-#         -print how many are there and those info
-#         -prompt user if they want compute those with normal price or not and show output
-#             -if true
-#                 -loop normal price and compute estimated & cost and update those item estimated & cost
-
-#                 -loop items list, sum total revenue and delivery amount, compute net profit margin and show output
-#             -else
-#                 -loop item list, sum delivery amount (item boolean check = true), compute net profit margin and show output
-#                 -print those item that not existed in the discount list
+# if everything has discount price compute immediately
+is_discount_price_list_counter = 0
+for product in item_list:
     
-#     -else
-#         -loop item list, sum every delivery amount (item boolean check = true), compute net profit margin and show output
-#         -print those item
-#         -print all items in discount list
+    if product.in_discount_price_list = False
+    is_discount_price_list_counter += 1
+
+if is_discount_price_list_counter == 0:
+    
+    current_deliverables = 0
+    for product in item_list:
+        current_deliverables += product.estimated
+    
+    total_deliverables = current_deliverables + region_monthly_performance.revenue
+
+# else handling
+else:
+    # // action taken in prior for what if there is items cannot be priced in normal price list
+    # -loop the item list
+    #     -show how many are there
+    #     -prompt user to provide input(estimated) & cost for those items amd update those item OR skip
+
+
+    # // Check if item.booleam.check_if_in_discount_price_false and
+    # -loop item list
+    #     -show how many are there
+    #     -prompt user to provide input(estimated) & cost for those items amd update those item OR skip
+
+    # Show user the items that without the normal price
+    for product in item_list:
+
+        if product.in_normal_price_list == False:
+            product.print_info()
+
+    user_input = input("Plug in normal price? y for go, n for nah\n")
+
+    if user_input == "y":
+
+        # Prompt user for normal price input for those product
+        for product in item_list:
+
+            if product.in_normal_price_list == False:
+                print("Plug in normal price for", product.model, "?")
+                estimated_normal_price = float(input("normal price:"))
+                product.normal_price = estimated_normal_price
+    
+
+
+
+
 
 
 
