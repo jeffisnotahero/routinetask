@@ -149,7 +149,7 @@ with open("specialpricelist.csv", "r") as discount_price_list_database, open("no
 # Region monthly performance object
 region_monthly_performance = Region("Region_monthly_performance")
 
-Open revenue CSV and read everything into memory
+# Open revenue CSV and read everything into memory
 with open("revenue.csv", "r", encoding="shift_jis") as database:
 
     # row[0] : "distributor"
@@ -176,10 +176,11 @@ region_monthly_performance.print_info()
 
 # if everything has discount price compute immediately
 is_discount_price_list_counter = 0
+
 for product in item_list:
     
-    if product.in_discount_price_list = False
-    is_discount_price_list_counter += 1
+    if product.in_discount_price_list == False:
+        is_discount_price_list_counter += 1
 
 if is_discount_price_list_counter == 0:
     
@@ -188,6 +189,7 @@ if is_discount_price_list_counter == 0:
         current_deliverables += product.estimated
     
     total_deliverables = current_deliverables + region_monthly_performance.revenue
+    print(f"total_deliverables: {total_deliverables:,}")
 
 # else handling
 else:
