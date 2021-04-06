@@ -36,29 +36,60 @@
         -if there is no same product name with items from normal price list
             -change item.boolean.check_if_in_normal_price to false
 
-// action taken in prior for what if there is items cannot be priced in normal price list
--loop the item list
-    -show how many are there
-    -prompt user to provide input(estimated) & cost for those items amd update those item
-
 -compute total revenue & cost as of now
 
-// prompt decision before compute final data
--loop item list
+// if everything has discount price compute immediately
+-loop item list:
+    counter = 0
+    if item is discount price = false
+    counter + 1
+if counter = 0:
+    -loop item list:
+        compute total deliverables
+    sum total revenue & deliverables
 
-    -if there is item.booleam.check_if_in_discount_price_false
-        -print how many are there and those info
-        -prompt user if they want compute those with normal price or not and show output
-            -if true
-                -loop normal price and compute estimated & cost and update those item estimated & cost
+else:
+    // action taken in prior for what if there is items cannot be priced in normal price list
+    -loop the item list
+        -show how many are there
+        -prompt user to provide input(estimated) & cost for those items amd update those item OR skip
 
-                -loop items list, sum total revenue and delivery amount, compute net profit margin and show output
-            -else
-                -loop item list, sum delivery amount (item boolean check = true), compute net profit margin and show output
-                -print those item that not existed in the discount list
-    
-    -else
-        -loop item list, sum every delivery amount (item boolean check = true), compute net profit margin and show output
-        -print those item
-        -print all items in discount list
+
+    // Check if item.booleam.check_if_in_discount_price_false and
+    -loop item list
+        -show how many are there
+        -prompt user to provide input(estimated) & cost for those items amd update those item OR skip
+
+
+    // prompt decision before compute final data
+    // show user how many are item without normal and discount as well as item without discount only
+    -loop item list
+        -if item_normal_list AND item_discount_list is true:
+            Acounter +1
+        
+        -if item_normal_list is true and item_discount_list is false:
+            Bcounter +1
+
+        -if item_normal_list is false and item_discount_list is true:
+            Ccounter +1
+
+    print all type of counter
+
+    -prompt user if they want to continue to compute all data with later added data
+        -if true (usually scenario where later added price is fine)
+            -deliverables = 0
+            -loop item list
+                -if item is in discount list true
+                    -deliverables += item.estimated
+                else
+                    -deliverables += item.normal price
+
+        -else:
+            -deliverables = 0
+            -loop item list
+                -if item is in discount list true
+                    -deliverables += item.estimated
+                    
+        - total expected deliverable = deliverables + total revenue
+
 
