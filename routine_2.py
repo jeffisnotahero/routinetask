@@ -63,7 +63,7 @@ def create_item_name_list(commandline_argument_1):
     return item_name_list
 
 # Create item list
-item_name_list = create_item_name_list("koreadelivery.csv")
+item_name_list = create_item_name_list("csldeliverable.csv")
 # print(item_name_list)
 
 # Create item object and insert into list
@@ -75,7 +75,7 @@ for name in item_name_list:
 #     print(item.model)
 
 # Add units
-with open("koreadelivery.csv", "r") as deliverables_database:
+with open("csldeliverable.csv", "r") as deliverables_database:
 
         deliverables_data = csv.reader(deliverables_database)
         next(deliverables_data)
@@ -85,12 +85,9 @@ with open("koreadelivery.csv", "r") as deliverables_database:
         for i in range(length_item_list):
             item_list[i].unit += int(list_deliverables_data[i][2])
 
-# for i in range(length_item_list):
-#             print(item_list[i].model, item_list[i].unit)
-        
             
 #check every item could be priced with discount list and normal list and label it
-with open("specialpricelist.csv", "r") as discount_price_list_database, open("normalpricelist.csv", "r") as normal_price_list_database:
+with open("cslnormalpricelist.csv", "r") as discount_price_list_database, open("normalpricelist.csv", "r") as normal_price_list_database:
 
     discount_price_list_data = csv.reader(discount_price_list_database)
     next(discount_price_list_data)
@@ -108,7 +105,7 @@ with open("specialpricelist.csv", "r") as discount_price_list_database, open("no
 
         in_discount_price_list = False
 
-        # loop all price list to find if current model has a discount price
+        # loop all price list to find if curreunt model has a discount price
         for product_from_discount_list in discount_price_list:
 
             if product.model == product_from_discount_list[6]:
@@ -123,6 +120,9 @@ with open("specialpricelist.csv", "r") as discount_price_list_database, open("no
         
         # Reset boolean
         in_discount_price_list = False
+    
+    # for product in item_list:
+    #     product.print_info()
     
     # labal normal price
     for product in item_list:
@@ -272,7 +272,4 @@ else:
 
         total_deliverables = current_deliverables + region_monthly_performance.revenue
         print(f"{total_deliverables:,}")
-
-# for product in item_list:
-#     product.print_info()
 
