@@ -6,11 +6,6 @@ import csv
 import sys
 from helper import *
 
-# # Check command-line argument
-# if len(sys.argv) != 4:
-#     print("Usage: python routine.py 'YOUR DELIVERABLE CSV'.csv 'YOUR DISCOUNT PRICE LIST CSV'.csv 'YOUR NORMAL PRICE LIST CSV'.csv ----MUST FOLLOW THE ORDER OF INPUT OF CSV FILE!!!----")
-#     sys.exit(1)
-
 # Parent Class Deliverables
 class Deliverables:
     def __init__(self, model, unit=0, estimated=0, normal_price =0, in_normal_price_list=True, in_discount_price_list=True):
@@ -84,9 +79,6 @@ if incoming_computed_data == 1:
     item_list = []
     for name in item_name_list:
         item_list.append(Deliverables(name))
-
-    # for item in item_list:
-    #     print(item.model)
 
     # Add units
     with open(sys.argv[1], "r") as deliverables_database:
@@ -184,8 +176,11 @@ if incoming_computed_data == 1:
 
         # Multiply 109 for conversion from USD TO JPY
         total_deliverables = (current_deliverables * 109) + region_monthly_performance.revenue
-
-        print(f"total_deliverables: {total_deliverables:,}")
+        
+        print(f"\n")
+        print(f"deliverables: {current_deliverables:,}")
+        print(f"total_expected_deliverables: {total_deliverables:,}")
+        print(f"\n")
 
     # else handling
     else:
@@ -244,7 +239,7 @@ if incoming_computed_data == 1:
 
         print(f"""
         Enter 
-        1: Compute final data with latter estimated normal, 
+        1: Compute final data with newly estimated normal price, 
         2: Compute final data with only available normal price """)
 
         user_decision = int(input())
@@ -266,8 +261,11 @@ if incoming_computed_data == 1:
             for item in item_list:
                 if item.in_discount_price_list == False:
                     item.print_info()
-
-            print(f"{total_deliverables:,} ")
+            
+            print(f"\n")
+            print(f"deliverables: {current_deliverables:,}")
+            print(f"total_expected_deliverables: {total_deliverables:,}")
+            print(f"\n")
         
         else:
             current_deliverables = 0
@@ -282,22 +280,21 @@ if incoming_computed_data == 1:
             for item in item_list:
                 if item.in_discount_price_list == False:
                     item.print_info()
-
-            print(f"{total_deliverables:,}")
+            
+            print(f"\n")
+            print(f"deliverables: {current_deliverables:,}")
+            print(f"total_expected_deliverables: {total_deliverables:,}")
+            print(f"\n")
 
 # Handle China data
 else:
     # Create item list
     item_name_list = create_item_name_list("csldeliverable.csv")
-    # print(item_name_list)
 
     # Create item object and insert into list
     item_list = []
     for name in item_name_list:
         item_list.append(Deliverables(name, in_discount_price_list=False))
-
-    # for item in item_list:
-    #     print(item.model)
 
     # Add units
     with open("csldeliverable.csv", "r") as deliverables_database:
@@ -377,7 +374,11 @@ else:
             current_deliverables += product.estimated
         
         total_deliverables = (current_deliverables * 109) + region_monthly_performance.revenue
-        print(f"total_deliverables: {total_deliverables:,}")
+
+        print(f"\n")
+        print(f"deliverables: {current_deliverables:,}")
+        print(f"total_expected_deliverables: {total_deliverables:,}")
+        print(f"\n")
 
     # else handling
     else:
@@ -413,7 +414,7 @@ else:
 
         print(f"""
         Enter 
-        1: Compute final data with latter estimated normal, 
+        1: Compute final data with newly estimated normal price, 
         2: Compute final data with only available normal price """)
 
         user_decision = int(input())
@@ -435,8 +436,10 @@ else:
                 if item.in_normal_price_list == False:
                     item.print_info()
 
-
-            print(f"{total_deliverables:,} ")
+            print(f"\n")
+            print(f"deliverables: {current_deliverables:,}")
+            print(f"total_expected_deliverables: {total_deliverables:,}")
+            print(f"\n")
         
         else:
             current_deliverables = 0
@@ -453,7 +456,10 @@ else:
                 if item.in_normal_price_list == False:
                     item.print_info()
 
-            print(f"{total_deliverables:,}")
+            print(f"\n")
+            print(f"deliverables: {current_deliverables:,}")
+            print(f"total_expected_deliverables: {total_deliverables:,}")
+            print(f"\n")
 
 
 
