@@ -157,26 +157,17 @@ def check_all_deliverables_with_required_price(product_list, in_discount_or_norm
 
     return is_discount_or_normal_price_list_counter
 
-def compute_total_deliverables_if_all_with_required_price(discount_or_normal_price, product_list):
+def compute_total_deliverables_if_all_with_required_price(product_list, discount_or_normal_price):
     
     current_deliverables = 0
-    if discount_or_normal_price == "discount":
-        for product in product_list:
-            current_deliverables += product.estimated
 
-        jpy_current_deliverables = currency_conversion(current_deliverables, 109) # Convert to JPY currency
-        total_deliverables = jpy_current_deliverables + region_monthly_performance.revenue
-        
-        print_current_and_total_expected_deliverables(current_deliverables, total_deliverables)
+    for product in product_list:
+        current_deliverables += getattr(product, discount_or_normal_price)
 
-    elif discount_or_normal_price == "normal price":
-        for product in product_list:
-            current_deliverables += product.normal_price
-        
-        jpy_current_deliverables = currency_conversion(current_deliverables, 109) # Convert to JPY currency
-        total_deliverables = jpy_current_deliverables + region_monthly_performance.revenue
-
-        print_current_and_total_expected_deliverables(current_deliverables, total_deliverables)
+    jpy_current_deliverables = currency_conversion(current_deliverables, 109) # Convert to JPY currency
+    total_deliverables = jpy_current_deliverables + region_monthly_performance.revenue
+    
+    print_current_and_total_expected_deliverables(current_deliverables, total_deliverables)
 
 def prompt_user_plug_in_estimated_normal_price(product_list):
             # Show user the items that without the normal price
@@ -323,7 +314,7 @@ if incoming_computed_data == 1:
 
     if is_discount_price_list_counter == 0:
         
-        compute_total_deliverables_if_all_with_required_price("discount", product_list)
+        compute_total_deliverables_if_all_with_required_price(product_list, "estimated")
 
     # else handling
     else:
@@ -369,7 +360,7 @@ else:
 
     if is_normal_price_list_counter == 0:
         
-        compute_total_deliverables_if_all_with_required_price("normal price", product_list)
+        compute_total_deliverables_if_all_with_required_price(product_list, "normal_price")
 
     # else handling
     else:
