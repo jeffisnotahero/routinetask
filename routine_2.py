@@ -73,7 +73,6 @@ if incoming_computed_data == 1:
 
     # Create item list
     item_name_list = create_item_name_list(sys.argv[1])
-    # print(item_name_list)
 
     # Create item object and insert into list
     item_list = []
@@ -127,8 +126,7 @@ if incoming_computed_data == 1:
                     product.normal_price = float(product_from_normal_list[2]) # [2] => price column
                     product.in_normal_price_list = True
                     break
-
-
+                
     # ompute total revenue & cost as of now
     # Region monthly performance object
     region_monthly_performance = Region("Region_monthly_performance")
