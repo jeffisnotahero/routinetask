@@ -67,17 +67,8 @@ with open(sys.argv[1], "r", encoding="shift_jis") as database:
         distsributor_net_profit_margin = format_value_with_percentage(distributor_net_profit_margin_non_percentage) # Format value with percentage
         update_net_profit_margin(distributor, distsributor_net_profit_margin) # Update distributors' Net profit margin
 
-    # Compute Region Monthly Total Booking
-    for row in list_revenue_data:
-
-        update_revenue_and_cost(region_monthly_performance, row)
-    
-    region_net_sales = compute_net_sales(region_monthly_performance) # Compute Region's Net sales
-    update_net_sales(region_monthly_performance, region_net_sales) # Update Region's Net sales
-
-    region_net_profit_margin_non_percentage = compute_net_profit_margin(region_monthly_performance) # Compute Region's Net profit margin
-    region_net_profit_margin = format_value_with_percentage(region_net_profit_margin_non_percentage) # Format value with percentage
-    update_net_profit_margin(region_monthly_performance, region_net_profit_margin) # Update Region's Net profit margin
+# Compute Region Monthly Total Revenue
+compute_revenue_data(sys.argv[1], region_monthly_performance)
 
 # Open booking CSV and read everything into memory
 with open(sys.argv[2], "r", encoding="shift_jis") as database:
