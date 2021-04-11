@@ -72,15 +72,57 @@ def add_deliverables_unit_data(commandline_argument_1, product_list):
             for model in range(length_product_list):
                 product_list[model].unit += int(list_deliverables_data[model][2]) # [2] product unit
 
-# Check command-line argument 
-if len(sys.argv) > 5 or len(sys.argv) < 4:
-    print(f"""
-                                            ----MUST FOLLOW THE ORDER OF INPUT OF CSV FILE!!!---- 
-        Usage: python routine.py 'DELIVERABLES'.csv, 'DSICOUNT PRICE LIST'.csv, 'NORMAL PRICE LIST'.csv, 'REVENUE AS OF NOW'.csv for Korea data;
-        Usage: python routine.py 'DELIVERABLES'.csv, 'NORMAL PRICE LIST'.csv, 'REVENUE AS OF NOW'.csv for China data
-                                            ----MUST FOLLOW THE ORDER OF INPUT OF CSV FILE!!!---- 
-        \n""")
-    sys.exit(1)
+def add_discount_price(commandline_argument_2, product_list):
+    """
+    Add discount price for deliverables
+    """
+    with open(commandline_argument_2, "r") as discount_price_list_database:
+
+        discount_price_list_data = csv.reader(discount_price_list_database)
+        next(discount_price_list_data)
+        discount_price_list = list(discount_price_list_data)
+
+    # Label discount price
+    for product in product_list:
+
+        product.in_discount_price_list = False
+
+        # loop all price list to find if curreunt model has a discount price
+        for product_from_discount_list in discount_price_list:
+
+            if product.model == product_from_discount_list[6]: # [6] => 
+                product.estimated = product.unit * float(product_from_discount_list[7]) # [7] => price column
+                product.in_discount_price_list = True
+                break
+
+def add_normal_price(commandline_argument, product_list):
+
+    with open(commandline_argument, "r") as normal_price_list_database:
+        normal_price_list_data = csv.reader(normal_price_list_database)
+        next(normal_price_list_data)
+        normal_price_list = list(normal_price_list_data)
+
+    # labal normal price
+    for product in product_list:
+
+        product.in_normal_price_list = False
+
+        for product_from_normal_list in normal_price_list:
+            
+            if product.model == product_from_normal_list[1]:
+                product.normal_price = product.unit * float(product_from_normal_list[2]) # [2] => price column
+                product.in_normal_price_list = True
+                break
+
+# # Check command-line argument 
+# if len(sys.argv) > 5 or len(sys.argv) < 4:
+#     print(f"""
+#                                             ----MUST FOLLOW THE ORDER OF INPUT OF CSV FILE!!!---- 
+#         Usage: python routine.py 'DELIVERABLES'.csv, 'DSICOUNT PRICE LIST'.csv, 'NORMAL PRICE LIST'.csv, 'REVENUE AS OF NOW'.csv for Korea data;
+#         Usage: python routine.py 'DELIVERABLES'.csv, 'NORMAL PRICE LIST'.csv, 'REVENUE AS OF NOW'.csv for China data
+#                                             ----MUST FOLLOW THE ORDER OF INPUT OF CSV FILE!!!---- 
+#         \n""")
+#     sys.exit(1)
 
 # Prompt user which data to be computed
 incoming_computed_data = int(input("Enter 1 if Korea data, Enter 2 if China data \n"))
@@ -97,44 +139,12 @@ if incoming_computed_data == 1:
     # Add deliverables unit data 
     add_deliverables_unit_data(sys.argv[1], product_list)
 
-    #check every item could be priced with discount list and normal list and label it
-    with open(sys.argv[2], "r") as discount_price_list_database, open(sys.argv[3], "r") as normal_price_list_database:
+    
+    add_discount_price(sys.argv[2], product_list)
 
-        discount_price_list_data = csv.reader(discount_price_list_database)
-        next(discount_price_list_data)
-        discount_price_list = list(discount_price_list_data)
-        
-        normal_price_list_data = csv.reader(normal_price_list_database)
-        next(normal_price_list_data)
-        normal_price_list = list(normal_price_list_data)
-
-        # Label discount price
-        for product in product_list:
-
-            product.in_discount_price_list = False
-
-            # loop all price list to find if curreunt model has a discount price
-            for product_from_discount_list in discount_price_list:
-
-                if product.model == product_from_discount_list[6]:
-                    product.estimated = product.unit * float(product_from_discount_list[7]) # [7] => price column
-                    product.in_discount_price_list = True
-                    break
-
-        # labal normal price
-        for product in product_list:
-
-            product.in_normal_price_list = False
-
-            for product_from_normal_list in normal_price_list:
+    add_normal_price(sys.argv[3], product_list)
                 
-                if product.model == product_from_normal_list[1]:
-                    product.normal_price = float(product_from_normal_list[2]) # [2] => price column
-                    product.in_normal_price_list = True
-                    break
-                
-    # ompute total revenue & cost as of now
-    # Region monthly performance object
+    # Compute total revenue & cost as of now
     region_monthly_performance = Region("Region_monthly_performance")
 
     # Open revenue CSV and read everything into memory
@@ -303,31 +313,10 @@ else:
     # Add deliverables unit data
     add_deliverables_unit_data(sys.argv[1], product_list)
 
-                
-    #check every item could be priced with discount list and normal list and label it
-    with open("cslnormalpricelist.csv", "r") as normal_price_list_database:
-        
-        normal_price_list_data = csv.reader(normal_price_list_database)
-        next(normal_price_list_data)
-        normal_price_list = list(normal_price_list_data)
-
-        # label normal price
-        for product in product_list:
-
-            # Assume all producs are not in normal price list
-            product.in_normal_price_list = False
-
-            # loop all price list to find if curreunt model has a normal price
-            for product_from_normal_list in normal_price_list:
-
-                if product.model == product_from_normal_list[1]:    # [1] => model column
-                    product.estimated = product.unit * float(product_from_normal_list[2]) # [2] => price column
-                    product.in_normal_price_list = True
-                    break
+    # Add normal price
+    add_normal_price(sys.argv[2], product_list)
 
     # Compute total revenue & cost as of now
-
-    # Region monthly performance object
     region_monthly_performance = Region("Region_monthly_performance")
 
     # Open revenue CSV and read everything into memory
@@ -367,7 +356,7 @@ else:
         
         current_deliverables = 0
         for product in product_list:
-            current_deliverables += product.estimated
+            current_deliverables += product.normal_price
         
         total_deliverables = (current_deliverables * 109) + region_monthly_performance.revenue
 
@@ -392,7 +381,7 @@ else:
                 print("\n")
                 print(f"Plug in estimated normal price for, {product.model}:")
                 estimated_normal_price = float(input())
-                product.normal_price = estimated_normal_price * product.unit
+                product.estimated = estimated_normal_price * product.unit
         
         # prompt decision before compute final data
         # Show user how many are item without normal price
@@ -422,9 +411,9 @@ else:
             for product in product_list:
 
                 if product.in_normal_price_list == True:
-                    current_deliverables += product.estimated
-                else:
                     current_deliverables += product.normal_price
+                else:
+                    current_deliverables += product.estimated
 
             total_deliverables = (current_deliverables * 109) + region_monthly_performance.revenue
 
@@ -443,7 +432,7 @@ else:
             for product in product_list:
 
                 if product.in_normal_price_list == True:
-                    current_deliverables += product.estimated
+                    current_deliverables += product.normal_price
 
             total_deliverables = (current_deliverables * 109) + region_monthly_performance.revenue
 
