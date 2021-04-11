@@ -175,6 +175,14 @@ if incoming_computed_data == 1:
     compute_revenue_data(sys.argv[4], region_monthly_performance)
     region_monthly_performance.print_info()
 
+    def currency_conversion(price_amount, conversion_rate):
+        """
+        Returns price amount converted
+        with converstion rate specified
+        by second argument.
+        """
+        return price_amount * 109
+
     # if everything has discount price compute immediately
     is_discount_price_list_counter = 0
 
@@ -191,8 +199,8 @@ if incoming_computed_data == 1:
             current_deliverables += product.estimated
             product.print_info()
 
-        # Multiply 109 for conversion from USD TO JPY
-        total_deliverables = (current_deliverables * 109) + region_monthly_performance.revenue
+        jpy_current_deliverables = currency_conversion(current_deliverables, 109) # Convert to JPY currency
+        total_deliverables = jpy_current_deliverables + region_monthly_performance.revenue
         
         print(f"\n")
         print(f"deliverables: {current_deliverables:,}")
