@@ -14,7 +14,6 @@
 #         1. Cost
 #         2. Net sales
 #         3. Net profit margin
-# 2. Check if there is date (出荷日) later than current date when the data downloaded, or current date  in the table
 
 import csv
 import sys
