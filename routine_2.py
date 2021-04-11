@@ -149,21 +149,49 @@ def currency_conversion(price_amount, conversion_rate):
 
 def check_all_deliverables_with_required_price(in_discount_or_normal_price_list, product_list):
     
-    is_discount_or_normal_price_list_price_list_counter = 0
+    is_discount_or_normal_price_list_counter = 0
 
     if in_discount_or_normal_price_list == "in_discount_price_list":
         for product in product_list:
             
             if product.in_discount_price_list == False:
-                is_discount_or_normal_price_list_price_list_counter += 1
+                is_discount_or_normal_price_list_counter += 1
     
     elif in_discount_or_normal_price_list == "in_normal_price_list":
         for product in product_list:
     
             if product.in_normal_price_list == False:
-                is_discount_or_normal_price_list_price_list_counter += 1
+                is_discount_or_normal_price_list_counter += 1
     
-    return is_discount_or_normal_price_list_price_list_counter
+    return is_discount_or_normal_price_list_counter
+
+def compute_total_deliverables_if_all_with_required_price(discount_or_normal_price, product_list):
+    
+    current_deliverables = 0
+    if discount_or_normal_price == "discount":
+        for product in product_list:
+            current_deliverables += product.estimated
+
+        jpy_current_deliverables = currency_conversion(current_deliverables, 109) # Convert to JPY currency
+        total_deliverables = jpy_current_deliverables + region_monthly_performance.revenue
+        
+        print(f"\n")
+        print(f"deliverables: {current_deliverables:,}")
+        print(f"total_expected_deliverables: {total_deliverables:,}")
+        print(f"\n")
+
+    elif discount_or_normal_price == "normal price":
+        for product in product_list:
+            current_deliverables += product.normal_price
+        
+        jpy_current_deliverables = currency_conversion(current_deliverables, 109) # Convert to JPY currency
+        total_deliverables = jpy_current_deliverables + region_monthly_performance.revenue
+
+        print(f"\n")
+        print(f"deliverables: {current_deliverables:,}")
+        print(f"total_expected_deliverables: {total_deliverables:,}")
+        print(f"\n")
+
 
 # # Check command-line argument 
 # if len(sys.argv) > 5 or len(sys.argv) < 4:
@@ -206,17 +234,7 @@ if incoming_computed_data == 1:
 
     if is_discount_price_list_counter == 0:
         
-        current_deliverables = 0
-        for product in product_list:
-            current_deliverables += product.estimated
-
-        jpy_current_deliverables = currency_conversion(current_deliverables, 109) # Convert to JPY currency
-        total_deliverables = jpy_current_deliverables + region_monthly_performance.revenue
-        
-        print(f"\n")
-        print(f"deliverables: {current_deliverables:,}")
-        print(f"total_expected_deliverables: {total_deliverables:,}")
-        print(f"\n")
+        compute_total_deliverables_if_all_with_required_price("discount", product_list)
 
     # else handling
     else:
@@ -349,17 +367,7 @@ else:
 
     if is_normal_price_list_counter == 0:
         
-        current_deliverables = 0
-        for product in product_list:
-            current_deliverables += product.normal_price
-        
-        jpy_current_deliverables = currency_conversion(current_deliverables, 109) # Convert to JPY currency
-        total_deliverables = jpy_current_deliverables + region_monthly_performance.revenue
-
-        print(f"\n")
-        print(f"deliverables: {current_deliverables:,}")
-        print(f"total_expected_deliverables: {total_deliverables:,}")
-        print(f"\n")
+        compute_total_deliverables_if_all_with_required_price("normal price", product_list)
 
     # else handling
     else:
