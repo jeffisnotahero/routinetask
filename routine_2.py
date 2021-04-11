@@ -57,6 +57,21 @@ def create_item_name_list(commandline_argument_1):
 
     return item_name_list
 
+
+def add_deliverables_unit_data(commandline_argument_1, product_list):
+    """
+    Add deliverables unit data
+    """
+    with open(commandline_argument_1, "r") as deliverables_database:
+
+            deliverables_data = csv.reader(deliverables_database)
+            next(deliverables_data)
+            list_deliverables_data = list(deliverables_data)
+
+            length_product_list = len(product_list)
+            for model in range(length_product_list):
+                product_list[model].unit += int(list_deliverables_data[model][2]) # [2] product unit
+
 # Check command-line argument 
 if len(sys.argv) > 5 or len(sys.argv) < 4:
     print(f"""
@@ -75,21 +90,13 @@ if incoming_computed_data == 1:
     item_name_list = create_item_name_list(sys.argv[1])
 
     # Create item object and insert into list
-    item_list = []
+    product_list = []
     for name in item_name_list:
-        item_list.append(Deliverables(name))
+        product_list.append(Deliverables(name))
 
-    # Add units
-    with open(sys.argv[1], "r") as deliverables_database:
+    # Add deliverables unit data 
+    add_deliverables_unit_data(sys.argv[1], product_list)
 
-            deliverables_data = csv.reader(deliverables_database)
-            next(deliverables_data)
-            list_deliverables_data = list(deliverables_data)
-
-            length_item_list = len(item_list)
-            for i in range(length_item_list):
-                item_list[i].unit += int(list_deliverables_data[i][2])
-                
     #check every item could be priced with discount list and normal list and label it
     with open(sys.argv[2], "r") as discount_price_list_database, open(sys.argv[3], "r") as normal_price_list_database:
 
@@ -102,7 +109,7 @@ if incoming_computed_data == 1:
         normal_price_list = list(normal_price_list_data)
 
         # Label discount price
-        for product in item_list:
+        for product in product_list:
 
             product.in_discount_price_list = False
 
@@ -115,7 +122,7 @@ if incoming_computed_data == 1:
                     break
 
         # labal normal price
-        for product in item_list:
+        for product in product_list:
 
             product.in_normal_price_list = False
 
@@ -158,7 +165,7 @@ if incoming_computed_data == 1:
     # if everything has discount price compute immediately
     is_discount_price_list_counter = 0
 
-    for product in item_list:
+    for product in product_list:
         
         if product.in_discount_price_list == False:
             is_discount_price_list_counter += 1
@@ -167,7 +174,7 @@ if incoming_computed_data == 1:
         
 
         current_deliverables = 0
-        for product in item_list:
+        for product in product_list:
             current_deliverables += product.estimated
             product.print_info()
 
@@ -183,13 +190,13 @@ if incoming_computed_data == 1:
     else:
         # Check and plug in estiamted normal price for those products without 
         # Show user the items that without the normal price
-        for product in item_list:
+        for product in product_list:
 
             if product.in_normal_price_list == False:
                 product.print_info()
         
         # Prompt user for normal price input for those product
-        for product in item_list:
+        for product in product_list:
 
             if product.in_normal_price_list == False:
                 print("Plug in estimated normal price for", product.model)
@@ -198,13 +205,13 @@ if incoming_computed_data == 1:
         
 
         # Check and plug in estiamted discount price for those products without 
-        for product in item_list:
+        for product in product_list:
 
             if product.in_discount_price_list == False:
                 product.print_info()
         
         # Prompt user for normal price input for those product
-        for product in item_list:
+        for product in product_list:
 
             if product.in_discount_price_list == False:
                 print("Plug in estimated discount price for", product.model)
@@ -218,7 +225,7 @@ if incoming_computed_data == 1:
         in_only_discount_price_list_counter = 0
         in_only_normal_price_list_counter = 0
 
-        for product in item_list:
+        for product in product_list:
             if product.in_discount_price_list == True and product.in_normal_price_list == True:
                 in_discount_and_normal_price_list_counter += 1
                 
@@ -228,11 +235,11 @@ if incoming_computed_data == 1:
             elif product.in_discount_price_list == False and product.in_normal_price_list == True:
                 in_only_normal_price_list_counter += 1
 
-        item_list_length = len(item_list)
+        product_list_length = len(product_list)
         
-        print(in_discount_and_normal_price_list_counter, "out of", item_list_length, "does have both prices")
-        print(in_only_discount_price_list_counter, "out of", item_list_length, "have discount price only")
-        print(in_only_normal_price_list_counter, "out of", item_list_lenght, "have normal price only")
+        print(in_discount_and_normal_price_list_counter, "out of", product_list_length, "does have both prices")
+        print(in_only_discount_price_list_counter, "out of", product_list_length, "have discount price only")
+        print(in_only_normal_price_list_counter, "out of", product_list_lenght, "have normal price only")
 
         print(f"""
         Enter 
@@ -246,7 +253,7 @@ if incoming_computed_data == 1:
             
             current_deliverables = 0
 
-            for product in item_list:
+            for product in product_list:
 
                 if product.in_discount_price_list == True:
                     current_deliverables += product.estimated
@@ -255,7 +262,7 @@ if incoming_computed_data == 1:
 
             total_deliverables = (current_deliverables * 109) + region_monthly_performance.revenue
 
-            for item in item_list:
+            for item in product_list:
                 if item.in_discount_price_list == False:
                     item.print_info()
             
@@ -267,14 +274,14 @@ if incoming_computed_data == 1:
         else:
             current_deliverables = 0
 
-            for product in item_list:
+            for product in product_list:
 
                 if product.in_discount_price_list == True:
                     current_deliverables += product.estimated
 
             total_deliverables = (current_deliverables * 109) + region_monthly_performance.revenue
 
-            for item in item_list:
+            for item in product_list:
                 if item.in_discount_price_list == False:
                     item.print_info()
             
@@ -289,20 +296,12 @@ else:
     item_name_list = create_item_name_list("csldeliverable.csv")
 
     # Create item object and insert into list
-    item_list = []
+    product_list = []
     for name in item_name_list:
-        item_list.append(Deliverables(name, in_discount_price_list=False))
+        product_list.append(Deliverables(name, in_discount_price_list=False))
 
-    # Add units
-    with open("csldeliverable.csv", "r") as deliverables_database:
-
-            deliverables_data = csv.reader(deliverables_database)
-            next(deliverables_data)
-            list_deliverables_data = list(deliverables_data)
-
-            length_item_list = len(item_list)
-            for i in range(length_item_list):
-                item_list[i].unit += int(list_deliverables_data[i][2])
+    # Add deliverables unit data
+    add_deliverables_unit_data(sys.argv[1], product_list)
 
                 
     #check every item could be priced with discount list and normal list and label it
@@ -313,7 +312,7 @@ else:
         normal_price_list = list(normal_price_list_data)
 
         # label normal price
-        for product in item_list:
+        for product in product_list:
 
             # Assume all producs are not in normal price list
             product.in_normal_price_list = False
@@ -359,7 +358,7 @@ else:
     # if everything has normal price compute immediately
     is_normal_price_list_counter = 0
 
-    for product in item_list:
+    for product in product_list:
         
         if product.in_normal_price_list == False:
             is_normal_price_list_counter += 1
@@ -367,7 +366,7 @@ else:
     if is_normal_price_list_counter == 0:
         
         current_deliverables = 0
-        for product in item_list:
+        for product in product_list:
             current_deliverables += product.estimated
         
         total_deliverables = (current_deliverables * 109) + region_monthly_performance.revenue
@@ -381,13 +380,13 @@ else:
     else:
         # Check and plug in estiamted normal price for those products without 
         # Show user the items that without the normal price
-        for product in item_list:
+        for product in product_list:
 
             if product.in_normal_price_list == False:
                 product.print_info()
         
         # Prompt user for normal price input for those product
-        for product in item_list:
+        for product in product_list:
 
             if product.in_normal_price_list == False:
                 print("\n")
@@ -399,15 +398,15 @@ else:
         # Show user how many are item without normal price
         product_not_in_normal_price_list_counter = 0
 
-        for product in item_list:
+        for product in product_list:
 
             if product.in_normal_price_list == False:
                 product_not_in_normal_price_list_counter += 1
         
-        item_list_length = len(item_list)
+        product_list_length = len(product_list)
 
         print("\n")
-        print(product_not_in_normal_price_list_counter, "out of", item_list_length, "does not have a normal price")
+        print(product_not_in_normal_price_list_counter, "out of", product_list_length, "does not have a normal price")
 
         print(f"""
         Enter 
@@ -420,7 +419,7 @@ else:
             
             current_deliverables = 0
 
-            for product in item_list:
+            for product in product_list:
 
                 if product.in_normal_price_list == True:
                     current_deliverables += product.estimated
@@ -429,7 +428,7 @@ else:
 
             total_deliverables = (current_deliverables * 109) + region_monthly_performance.revenue
 
-            for item in item_list:
+            for item in product_list:
                 if item.in_normal_price_list == False:
                     item.print_info()
 
@@ -441,7 +440,7 @@ else:
         else:
             current_deliverables = 0
 
-            for product in item_list:
+            for product in product_list:
 
                 if product.in_normal_price_list == True:
                     current_deliverables += product.estimated
@@ -449,7 +448,7 @@ else:
             total_deliverables = (current_deliverables * 109) + region_monthly_performance.revenue
 
 
-            for item in item_list:
+            for item in product_list:
                 if item.in_normal_price_list == False:
                     item.print_info()
 
