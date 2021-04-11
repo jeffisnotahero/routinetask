@@ -139,6 +139,32 @@ def compute_revenue_data(commandline_argument, region_monthly_performance):
         region_net_profit_margin = format_value_with_percentage(region_net_profit_margin_non_percentage) # Format value with percentage
         update_net_profit_margin(region_monthly_performance, region_net_profit_margin) # Update Region's Net profit margin
 
+def currency_conversion(price_amount, conversion_rate):
+    """
+    Returns price amount converted
+    with converstion rate specified
+    by second argument.
+    """
+    return price_amount * 109
+
+def check_all_deliverables_with_required_price(in_discount_or_normal_price_list, product_list):
+    
+    is_discount_or_normal_price_list_price_list_counter = 0
+
+    if in_discount_or_normal_price_list == "in_discount_price_list":
+        for product in product_list:
+            
+            if product.in_discount_price_list == False:
+                is_discount_or_normal_price_list_price_list_counter += 1
+    
+    elif in_discount_or_normal_price_list == "in_normal_price_list":
+        for product in product_list:
+    
+            if product.in_normal_price_list == False:
+                is_discount_or_normal_price_list_price_list_counter += 1
+    
+    return is_discount_or_normal_price_list_price_list_counter
+
 # # Check command-line argument 
 # if len(sys.argv) > 5 or len(sys.argv) < 4:
 #     print(f"""
@@ -175,29 +201,14 @@ if incoming_computed_data == 1:
     compute_revenue_data(sys.argv[4], region_monthly_performance)
     region_monthly_performance.print_info()
 
-    def currency_conversion(price_amount, conversion_rate):
-        """
-        Returns price amount converted
-        with converstion rate specified
-        by second argument.
-        """
-        return price_amount * 109
-
-    # if everything has discount price compute immediately
-    is_discount_price_list_counter = 0
-
-    for product in product_list:
-        
-        if product.in_discount_price_list == False:
-            is_discount_price_list_counter += 1
+    # Check if everything has discount price and compute immediately
+    is_discount_price_list_counter = check_all_deliverables_with_required_price("in_discount_price_list", product_list)
 
     if is_discount_price_list_counter == 0:
         
-
         current_deliverables = 0
         for product in product_list:
             current_deliverables += product.estimated
-            product.print_info()
 
         jpy_current_deliverables = currency_conversion(current_deliverables, 109) # Convert to JPY currency
         total_deliverables = jpy_current_deliverables + region_monthly_performance.revenue
@@ -333,12 +344,8 @@ else:
     region_monthly_performance.print_info()
 
     # if everything has normal price compute immediately
-    is_normal_price_list_counter = 0
 
-    for product in product_list:
-        
-        if product.in_normal_price_list == False:
-            is_normal_price_list_counter += 1
+    is_normal_price_list_counter = check_all_deliverables_with_required_price("in_normal_price_list", product_list)
 
     if is_normal_price_list_counter == 0:
         
@@ -346,7 +353,8 @@ else:
         for product in product_list:
             current_deliverables += product.normal_price
         
-        total_deliverables = (current_deliverables * 109) + region_monthly_performance.revenue
+        jpy_current_deliverables = currency_conversion(current_deliverables, 109) # Convert to JPY currency
+        total_deliverables = jpy_current_deliverables + region_monthly_performance.revenue
 
         print(f"\n")
         print(f"deliverables: {current_deliverables:,}")
