@@ -262,15 +262,15 @@ def compute_final_data_based_on_input_selection(product_list, in_normal_or_disco
 
         print_current_and_total_expected_deliverables(current_deliverables, total_deliverables)
 
-# # Check command-line argument 
-# if len(sys.argv) > 5 or len(sys.argv) < 4:
-#     print(f"""
-#                                             ----MUST FOLLOW THE ORDER OF INPUT OF CSV FILE!!!---- 
-#         Usage: python routine.py 'DELIVERABLES'.csv, 'DSICOUNT PRICE LIST'.csv, 'NORMAL PRICE LIST'.csv, 'REVENUE AS OF NOW'.csv for Korea data;
-#         Usage: python routine.py 'DELIVERABLES'.csv, 'NORMAL PRICE LIST'.csv, 'REVENUE AS OF NOW'.csv for China data
-#                                             ----MUST FOLLOW THE ORDER OF INPUT OF CSV FILE!!!---- 
-#         \n""")
-#     sys.exit(1)
+# Check command-line argument 
+if len(sys.argv) > 5 or len(sys.argv) < 4:
+    print(f"""
+                                            ----MUST FOLLOW THE ORDER OF INPUT OF CSV FILE!!!---- 
+        Usage: python routine.py 'DELIVERABLES'.csv, 'DSICOUNT PRICE LIST'.csv, 'NORMAL PRICE LIST'.csv, 'REVENUE AS OF NOW'.csv for Korea data;
+        Usage: python routine.py 'DELIVERABLES'.csv, 'NORMAL PRICE LIST'.csv, 'REVENUE AS OF NOW'.csv for China data
+                                            ----MUST FOLLOW THE ORDER OF INPUT OF CSV FILE!!!---- 
+        \n""")
+    sys.exit(1)
 
 # Prompt user which data to be computed
 incoming_computed_data = int(input("Enter 1 if Korea data, Enter 2 if China data \n"))
@@ -325,7 +325,7 @@ if incoming_computed_data == 1:
 # Handle China data
 else:
     # Create item list
-    item_name_list = create_item_name_list("csldeliverable.csv")
+    item_name_list = create_item_name_list(sys.argv[1])
 
     # Create item object and insert into list
     product_list = []
