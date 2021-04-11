@@ -47,7 +47,7 @@ if incoming_computed_data == 1:
 
     if is_discount_price_list_counter == 0:
         
-        compute_total_deliverables_if_all_with_required_price(product_list, "estimated")
+        compute_total_deliverables_if_all_with_required_price(product_list, "estimated", region_monthly_performance)
 
     # else handling
     else:
@@ -64,7 +64,7 @@ if incoming_computed_data == 1:
         1: Compute final data with available and newly estimated discount price, 
         2: Compute final data with only available discount price """)
 
-        compute_final_data_based_on_input_selection(product_list, "in_discount_price_list", "estimated")
+        compute_final_data_based_on_input_selection(product_list, "in_discount_price_list", "estimated", region_monthly_performance)
 
 # Handle China data
 else:
@@ -93,7 +93,7 @@ else:
 
     if is_normal_price_list_counter == 0:
         
-        compute_total_deliverables_if_all_with_required_price(product_list, "normal_price")
+        compute_total_deliverables_if_all_with_required_price(product_list, "normal_price", region_monthly_performance)
 
     # else handling
     else:
@@ -110,4 +110,4 @@ else:
         1: Compute final data with available and newly estimated normal price, 
         2: Compute final data with only available normal price """)
 
-        compute_final_data_based_on_input_selection(product_list, "in_normal_price_list", "normal_price")
+        compute_final_data_based_on_input_selection(product_list, "in_normal_price_list", "normal_price", region_monthly_performance)

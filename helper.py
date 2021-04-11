@@ -270,7 +270,7 @@ def check_all_deliverables_with_required_price(product_list, in_discount_or_norm
 
     return is_discount_or_normal_price_list_counter
 
-def compute_total_deliverables_if_all_with_required_price(product_list, discount_or_normal_price):
+def compute_total_deliverables_if_all_with_required_price(product_list, discount_or_normal_price, region_monthly_performance):
     
     current_deliverables = 0
 
@@ -280,7 +280,7 @@ def compute_total_deliverables_if_all_with_required_price(product_list, discount
     jpy_current_deliverables = currency_conversion(current_deliverables, 109) # Convert to JPY currency
     total_deliverables = jpy_current_deliverables + region_monthly_performance.revenue
     
-    print_current_and_total_expected_deliverables(current_deliverables, total_deliverables)
+    print_current_and_total_expected_deliverables(jpy_current_deliverables, total_deliverables)
 
 def prompt_user_plug_in_estimated_normal_price(product_list):
             # Show user the items that without the normal price
@@ -332,11 +332,11 @@ def check_total_numbers_unavailable_normal_or_discount_price(product_list, disco
 
 def print_current_and_total_expected_deliverables(current_deliverables, total_deliverables):
     print(f"\n")
-    print(f"deliverables: {current_deliverables:,}")
-    print(f"total_expected_deliverables: {total_deliverables:,}")
+    print(f"deliverables: {current_deliverables:,.2f}")
+    print(f"total_expected_deliverables: {total_deliverables:,.2f}")
     print(f"\n")
     
-def compute_final_data_based_on_input_selection(product_list, in_normal_or_discount_price_list, normal_or_discount_price):
+def compute_final_data_based_on_input_selection(product_list, in_normal_or_discount_price_list, normal_or_discount_price, region_monthly_performance):
 
     user_decision = int(input())
 
@@ -357,7 +357,7 @@ def compute_final_data_based_on_input_selection(product_list, in_normal_or_disco
             if getattr(product, in_normal_or_discount_price_list) == False:
                 product.print_info()
 
-        print_current_and_total_expected_deliverables(current_deliverables, total_deliverables)
+        print_current_and_total_expected_deliverables(jpy_current_deliverables, total_deliverables)
 
     else:
 
@@ -373,4 +373,4 @@ def compute_final_data_based_on_input_selection(product_list, in_normal_or_disco
             if getattr(product, in_normal_or_discount_price_list)  == False:
                 product.print_info()
 
-        print_current_and_total_expected_deliverables(current_deliverables, total_deliverables)
+        print_current_and_total_expected_deliverables(jpy_current_deliverables, total_deliverables)
