@@ -202,31 +202,20 @@ def prompt_user_plug_in_estimated_discount_price(product_list):
 
 # prompt decision before compute final data
 # Show user how many are item without normal price or discount price
-def check_total_numbers_unavailable_normal_or_discount_price(discount_or_normal_price, product_list):
+def check_total_numbers_unavailable_normal_or_discount_price(product_list, discount_or_normal_price):
     
     product_not_in_normal_or_discount_price_list_counter = 0
 
-    if discount_or_normal_price == "normal price":
-        for product in product_list:
+    for product in product_list:
 
-            if product.in_normal_price_list == False:
-                product_not_in_normal_or_discount_price_list_counter += 1
-        
-        product_list_length = len(product_list)
+        if getattr(product, discount_or_normal_price) == False:
+            product_not_in_normal_or_discount_price_list_counter += 1
+    
+    product_list_length = len(product_list)
 
-        print("\n")
-        print(product_not_in_normal_or_discount_price_list_counter, "out of", product_list_length, "does not have a normal price")
+    print("\n")
+    print(product_not_in_normal_or_discount_price_list_counter, "out of", product_list_length, "is not", discount_or_normal_price)
 
-    elif discount_or_normal_price == "discount price":
-        for product in product_list:
-
-            if product.in_discount_price_list == False:
-                product_not_in_normal_or_discount_price_list_counter += 1
-        
-        product_list_length = len(product_list)
-
-        print("\n")
-        print(product_not_in_normal_or_discount_price_list_counter, "out of", product_list_length, "does not have a discount price")
 
 def print_current_and_total_expected_deliverables(current_deliverables, total_deliverables):
     print(f"\n")
@@ -324,7 +313,7 @@ if incoming_computed_data == 1:
 
         # prompt decision before compute final data
         # Show user how many are item without normal and discount as well as item without discount only
-        check_total_numbers_unavailable_normal_or_discount_price("discount price", product_list)
+        check_total_numbers_unavailable_normal_or_discount_price(product_list, "in_discount_price_list")
 
         print(f"""
         Enter 
@@ -370,7 +359,7 @@ else:
 
         # prompt decision before compute final data
         # Show user how many are item without normal price
-        check_total_numbers_unavailable_normal_or_discount_price("normal price", product_list)
+        check_total_numbers_unavailable_normal_or_discount_price(product_list, "in_normal_price_list")
 
         print(f"""
         Enter 
