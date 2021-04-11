@@ -192,6 +192,21 @@ def compute_total_deliverables_if_all_with_required_price(discount_or_normal_pri
         print(f"total_expected_deliverables: {total_deliverables:,}")
         print(f"\n")
 
+def prompt_user_plug_in_estimated_normal_price(product_list):
+            # Show user the items that without the normal price
+            for product in product_list:
+
+                if product.in_normal_price_list == False:
+                    product.print_info()
+            
+            # Prompt user for normal price input for those product
+            for product in product_list:
+
+                if product.in_normal_price_list == False:
+                    print("\n")
+                    print(f"Plug in estimated normal price for, {product.model}:")
+                    estimated_normal_price = float(input())
+                    product.normal_price = estimated_normal_price * product.unit
 
 # # Check command-line argument 
 # if len(sys.argv) > 5 or len(sys.argv) < 4:
@@ -238,21 +253,9 @@ if incoming_computed_data == 1:
 
     # else handling
     else:
+
         # Check and plug in estiamted normal price for those products without 
-        # Show user the items that without the normal price
-        for product in product_list:
-
-            if product.in_normal_price_list == False:
-                product.print_info()
-        
-        # Prompt user for normal price input for those product
-        for product in product_list:
-
-            if product.in_normal_price_list == False:
-                print("Plug in estimated normal price for", product.model)
-                estimated_normal_price = float(input("estiamted normal price: \n"))
-                product.normal_price = estimated_normal_price * product.unit
-        
+        prompt_user_plug_in_estimated_normal_price(product_list)
 
         # Check and plug in estiamted discount price for those products without 
         for product in product_list:
@@ -371,21 +374,9 @@ else:
 
     # else handling
     else:
-        # Check and plug in estiamted normal price for those products without 
-        # Show user the items that without the normal price
-        for product in product_list:
-
-            if product.in_normal_price_list == False:
-                product.print_info()
         
-        # Prompt user for normal price input for those product
-        for product in product_list:
-
-            if product.in_normal_price_list == False:
-                print("\n")
-                print(f"Plug in estimated normal price for, {product.model}:")
-                estimated_normal_price = float(input())
-                product.estimated = estimated_normal_price * product.unit
+        # Check and plug in estiamted normal price for those products without 
+        prompt_user_plug_in_estimated_normal_price(product_list)
         
         # prompt decision before compute final data
         # Show user how many are item without normal price
@@ -414,10 +405,8 @@ else:
 
             for product in product_list:
 
-                if product.in_normal_price_list == True:
+                if product.in_normal_price_list == True or product.in_normal_price_list == False:
                     current_deliverables += product.normal_price
-                else:
-                    current_deliverables += product.estimated
 
             total_deliverables = (current_deliverables * 109) + region_monthly_performance.revenue
 
