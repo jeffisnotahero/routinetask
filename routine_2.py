@@ -89,7 +89,6 @@ if incoming_computed_data == 1:
             length_item_list = len(item_list)
             for i in range(length_item_list):
                 item_list[i].unit += int(list_deliverables_data[i][2])
-
                 
     #check every item could be priced with discount list and normal list and label it
     with open(sys.argv[2], "r") as discount_price_list_database, open(sys.argv[3], "r") as normal_price_list_database:
