@@ -114,6 +114,31 @@ def add_normal_price(commandline_argument, product_list):
                 product.in_normal_price_list = True
                 break
 
+def compute_revenue_data(commandline_argument, region_monthly_performance):
+        
+    # Open revenue CSV and read everything into memory
+    with open(commandline_argument, "r", encoding="shift_jis") as database:
+
+        # row[0] : "distributor"
+        # row[12] : "revenue"
+        # row[13] : "cost"
+        revenue_data = csv.reader(database)
+
+        next(revenue_data) # Skip first row (Description row)
+        list_revenue_data = list(revenue_data) # Convert csv data to list 
+
+        # Compute Region Monthly Total Booking
+        for row in list_revenue_data:
+
+            update_revenue_and_cost(region_monthly_performance, row)
+        
+        region_net_sales = compute_net_sales(region_monthly_performance) # Compute Region's Net sales
+        update_net_sales(region_monthly_performance, region_net_sales) # Update Region's Net sales
+
+        region_net_profit_margin_non_percentage = compute_net_profit_margin(region_monthly_performance) # Compute Region's Net profit margin
+        region_net_profit_margin = format_value_with_percentage(region_net_profit_margin_non_percentage) # Format value with percentage
+        update_net_profit_margin(region_monthly_performance, region_net_profit_margin) # Update Region's Net profit margin
+
 # # Check command-line argument 
 # if len(sys.argv) > 5 or len(sys.argv) < 4:
 #     print(f"""
@@ -139,37 +164,15 @@ if incoming_computed_data == 1:
     # Add deliverables unit data 
     add_deliverables_unit_data(sys.argv[1], product_list)
 
-    
+    # Add discount price
     add_discount_price(sys.argv[2], product_list)
 
+    # Add normal price
     add_normal_price(sys.argv[3], product_list)
-                
-    # Compute total revenue & cost as of now
+
+    # Compute revenue data as of now
     region_monthly_performance = Region("Region_monthly_performance")
-
-    # Open revenue CSV and read everything into memory
-    with open(sys.argv[4], "r", encoding="shift_jis") as database:
-
-        # row[0] : "distributor"
-        # row[12] : "revenue"
-        # row[13] : "cost"
-        revenue_data = csv.reader(database)
-
-        next(revenue_data) # Skip first row (Description row)
-        list_revenue_data = list(revenue_data) # Convert csv data to list 
-
-        # Compute Region Monthly Total Booking
-        for row in list_revenue_data:
-
-            update_revenue_and_cost(region_monthly_performance, row)
-        
-        region_net_sales = compute_net_sales(region_monthly_performance) # Compute Region's Net sales
-        update_net_sales(region_monthly_performance, region_net_sales) # Update Region's Net sales
-
-        region_net_profit_margin_non_percentage = compute_net_profit_margin(region_monthly_performance) # Compute Region's Net profit margin
-        region_net_profit_margin = format_value_with_percentage(region_net_profit_margin_non_percentage) # Format value with percentage
-        update_net_profit_margin(region_monthly_performance, region_net_profit_margin) # Update Region's Net profit margin
-
+    compute_revenue_data(sys.argv[4], region_monthly_performance)
     region_monthly_performance.print_info()
 
     # if everything has discount price compute immediately
@@ -316,32 +319,9 @@ else:
     # Add normal price
     add_normal_price(sys.argv[2], product_list)
 
-    # Compute total revenue & cost as of now
+    # Compute revenue data as of now
     region_monthly_performance = Region("Region_monthly_performance")
-
-    # Open revenue CSV and read everything into memory
-    with open("cslrevenue.csv", "r", encoding="shift_jis") as database:
-
-        # row[0] : "distributor"
-        # row[12] : "revenue"
-        # row[13] : "cost"
-        revenue_data = csv.reader(database)
-
-        next(revenue_data) # Skip first row (Description row)
-        list_revenue_data = list(revenue_data) # Convert csv data to list 
-
-        # Compute Region Monthly Total Booking
-        for row in list_revenue_data:
-
-            update_revenue_and_cost(region_monthly_performance, row)
-        
-        region_net_sales = compute_net_sales(region_monthly_performance) # Compute Region's Net sales
-        update_net_sales(region_monthly_performance, region_net_sales) # Update Region's Net sales
-
-        region_net_profit_margin_non_percentage = compute_net_profit_margin(region_monthly_performance) # Compute Region's Net profit margin
-        region_net_profit_margin = format_value_with_percentage(region_net_profit_margin_non_percentage) # Format value with percentage
-        update_net_profit_margin(region_monthly_performance, region_net_profit_margin) # Update Region's Net profit margin
-
+    compute_revenue_data(sys.argv[3], region_monthly_performance)
     region_monthly_performance.print_info()
 
     # if everything has normal price compute immediately
