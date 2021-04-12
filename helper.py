@@ -171,7 +171,6 @@ class Deliverables:
         In discount price list:    {self.in_discount_price_list}\n
         """, end='')
 
-# Function for creating name list
 def create_item_name_list(commandline_argument_1):
     """
     Return a product model name list from deliverables csv file,
@@ -200,7 +199,6 @@ def create_item_name_list(commandline_argument_1):
                 item_name_list.append(row[1])
 
     return item_name_list
-
 
 def add_deliverables_unit_data(commandline_argument_1, product_list):
     """
@@ -235,7 +233,7 @@ def add_discount_price(commandline_argument_2, product_list):
 
         product.in_discount_price_list = False
 
-        # loop all price list to find if curreunt model has a discount price
+        # Loop all price list to find if curreunt model has a discount price
         for product_from_discount_list in discount_price_list:
 
             if product.model == product_from_discount_list[6]: # [6] => 
@@ -254,7 +252,7 @@ def add_normal_price(commandline_argument, product_list):
         next(normal_price_list_data)
         normal_price_list = list(normal_price_list_data)
 
-    # labal normal price
+    # Labal normal price
     for product in product_list:
 
         product.in_normal_price_list = False
