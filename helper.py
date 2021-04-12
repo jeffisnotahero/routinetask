@@ -1,7 +1,9 @@
 import csv
 
-# Parent Class Monthly Performance
 class MonthlyPerformance:
+    """
+    Parent class for Monthly Performance
+    """
     def __init__(self, name, booking=0, revenue=0, cost=0, net_sales=0, net_profit_margin=0):
         self.name = name
         self.booking = booking
@@ -24,17 +26,25 @@ class MonthlyPerformance:
         Net profit margin:  {self.net_profit_margin}\n
         """, end='')
 
-# Create Child class (Distributor)
 class Distributor(MonthlyPerformance):
+    """
+    Distributor Child class that
+    inherit Monthly Performance properties 
+    """
     pass
 
-# Create Child class (Region)
 class Region(MonthlyPerformance):
+    """
+    Region Child class that
+    inherits Monthly Performance properties
+    """
     pass
 
-# Function for creating name list
 def create_name_list(commandline_argument_1, commandline_argument_2):
-
+    """
+    Return a Distributor name list from Revenue csv file and Booking csv file,
+    which both specified by 2 arguments
+    """
     name_list = []
 
     # Add name from both csv
@@ -76,33 +86,48 @@ def create_name_list(commandline_argument_1, commandline_argument_2):
 
     return name_list
 
-# Function for updating Revenue & Cost
 def update_revenue_and_cost(target_object, row):
+    """
+    Update the Distributor's revenue and cost data
+    """
     revenue = row[12]
     target_object.revenue += int(revenue)
     cost = row[13]
     target_object.cost += int(cost)
 
-# Function for updating Booking
 def update_booking(target_object, row):
+    """
+    Update Distributor or Region's booking data
+    """
     booking = row[12]
     target_object.booking += int(booking)
 
-# Function for updating Net sales
 def update_net_sales(target_object, net_sales):
+    """
+    Update Distributor or Region's net sales data
+    """
     target_object.net_sales = net_sales
 
-# Function for updating Net profit margin
 def update_net_profit_margin(target_object, profit_margin):
+    """
+    Update Distributor or Region's profit margin data
+    """
     target_object.net_profit_margin = profit_margin
 
-# Function for computing Net sales
 def compute_net_sales(target_object):
+    """
+    Return net sales data by finding the difference
+    of object's, which is an argument, revenue and cost data
+    """
     net_sales = target_object.revenue - target_object.cost
     return net_sales
 
-# Function for computing Net profit margin
 def compute_net_profit_margin(target_object):
+    """
+    Return net profit margin data by dividing the 
+    object's, which is an argument, net sales data with
+    revenue data.
+    """
 
     # Check if division by zero (aka distributor.revenue == 0)
     if target_object.revenue == 0:
@@ -112,15 +137,18 @@ def compute_net_profit_margin(target_object):
         net_profit_margin = target_object.net_sales / target_object.revenue
         return net_profit_margin
 
-# Format valye with percentage
 def format_value_with_percentage(original_value):
+    """
+    Return a value in percentage format from
+    an input argument, the original value
+    """
     percentage_value = "{0:.2%}".format(original_value)
     return percentage_value
 
-##########
-
-# Parent Class Deliverables
 class Deliverables:
+    """
+    Parent Class for Deliverables
+    """
     def __init__(self, model, unit=0, estimated=0, normal_price =0, in_normal_price_list=True, in_discount_price_list=True):
         self.model = model
         self.unit = unit
@@ -145,7 +173,10 @@ class Deliverables:
 
 # Function for creating name list
 def create_item_name_list(commandline_argument_1):
-
+    """
+    Return a product model name list from deliverables csv file,
+    specified by an argument
+    """
     item_name_list = []
 
     # Add name from both csv
@@ -173,7 +204,9 @@ def create_item_name_list(commandline_argument_1):
 
 def add_deliverables_unit_data(commandline_argument_1, product_list):
     """
-    Add deliverables unit data
+    Add deliverables unit data into
+    each deliverable from product list,
+    which specified by second argument
     """
     with open(commandline_argument_1, "r") as deliverables_database:
 
@@ -187,7 +220,9 @@ def add_deliverables_unit_data(commandline_argument_1, product_list):
 
 def add_discount_price(commandline_argument_2, product_list):
     """
-    Add discount price for deliverables
+    Add all available discount price for
+    deliverables and set in_discount_price_list to True,
+    if there is none
     """
     with open(commandline_argument_2, "r") as discount_price_list_database:
 
@@ -209,7 +244,11 @@ def add_discount_price(commandline_argument_2, product_list):
                 break
 
 def add_normal_price(commandline_argument, product_list):
-
+    """
+    Add all available normal price for
+    deliverables and set in_discount_price_list to True,
+    if there is none
+    """
     with open(commandline_argument, "r") as normal_price_list_database:
         normal_price_list_data = csv.reader(normal_price_list_database)
         next(normal_price_list_data)
@@ -228,7 +267,10 @@ def add_normal_price(commandline_argument, product_list):
                 break
 
 def compute_revenue_data(commandline_argument, region_monthly_performance):
-        
+    """
+    Compute revenue data with revenue csv file specified by first argument,
+    and add the data into Region Monthly Performance object
+    """
     # Open revenue CSV and read everything into memory
     with open(commandline_argument, "r", encoding="shift_jis") as database:
 
@@ -261,7 +303,12 @@ def currency_conversion(price_amount, conversion_rate):
     return price_amount * 109
 
 def check_all_deliverables_with_required_price(product_list, in_discount_or_normal_price_list):
-    
+    """
+    Return a counter showing if there is missing
+    discount or normal price for either each deliverables
+    supposed to have discount or normal price respectively,
+    which specified by second argument
+    """
     is_discount_or_normal_price_list_counter = 0
     for product in product_list:
         
@@ -271,7 +318,13 @@ def check_all_deliverables_with_required_price(product_list, in_discount_or_norm
     return is_discount_or_normal_price_list_counter
 
 def compute_total_deliverables_if_all_with_required_price(product_list, discount_or_normal_price, region_monthly_performance):
-    
+    """
+    Print the current and total expected deliverables,
+    after computation of total deliverables if only
+    all deliverables from product list have either price
+    supposed to have, normal or discount, which specified by
+    second argument for checking it.
+    """
     current_deliverables = 0
 
     for product in product_list:
@@ -283,40 +336,49 @@ def compute_total_deliverables_if_all_with_required_price(product_list, discount
     print_current_and_total_expected_deliverables(jpy_current_deliverables, total_deliverables)
 
 def prompt_user_plug_in_estimated_normal_price(product_list):
-            # Show user the items that without the normal price
-            for product in product_list:
+    """
+    Prompt user to plug in their estimated normal price,
+    if only the deliverable from product list does not have one
+    """
+    # Show user the items that without the normal price
+    for product in product_list:
 
-                if product.in_normal_price_list == False:
-                    product.print_info()
-            
-            # Prompt user for normal price input for those product
-            for product in product_list:
+        if product.in_normal_price_list == False:
+            product.print_info()
+    
+    # Prompt user for normal price input for those product
+    for product in product_list:
 
-                if product.in_normal_price_list == False:
-                    print("\n")
-                    print(f"Plug in estimated normal price for, {product.model}:")
-                    estimated_normal_price = float(input())
-                    product.normal_price = estimated_normal_price * product.unit
+        if product.in_normal_price_list == False:
+            print("\n")
+            print(f"Plug in estimated normal price for, {product.model}:")
+            estimated_normal_price = float(input())
+            product.normal_price = estimated_normal_price * product.unit
 
 def prompt_user_plug_in_estimated_discount_price(product_list):
+    """
+    Prompt user to plug in their estimated discount price,
+    if only the deliverable from product list does not have one
+    """
+    for product in product_list:
 
-            for product in product_list:
-
-                if product.in_discount_price_list == False:
-                    product.print_info()
-            
-            # Prompt user for normal price input for those product
-            for product in product_list:
-
-                if product.in_discount_price_list == False:
-                    print("Plug in estimated discount price for", product.model)
-                    estimated_discount_price = float(input("estimated discount price: \n"))
-                    product.estimated = estimated_discount_price * product.unit
-
-# prompt decision before compute final data
-# Show user how many are item without normal price or discount price
-def check_total_numbers_unavailable_normal_or_discount_price(product_list, discount_or_normal_price):
+        if product.in_discount_price_list == False:
+            product.print_info()
     
+    # Prompt user for normal price input for those product
+    for product in product_list:
+
+        if product.in_discount_price_list == False:
+            print("Plug in estimated discount price for", product.model)
+            estimated_discount_price = float(input("estimated discount price: \n"))
+            product.estimated = estimated_discount_price * product.unit
+
+def check_total_numbers_unavailable_normal_or_discount_price(product_list, discount_or_normal_price):
+    """
+    Print out the total numbers of deliverable that
+    does not have price supposed to have, discount or normal price,
+    which specified by second argument.
+    """
     product_not_in_normal_or_discount_price_list_counter = 0
 
     for product in product_list:
@@ -331,13 +393,24 @@ def check_total_numbers_unavailable_normal_or_discount_price(product_list, disco
 
 
 def print_current_and_total_expected_deliverables(current_deliverables, total_deliverables):
+    """
+    Print out the current deliverables and,
+    total expected deliverables
+    """
     print(f"\n")
     print(f"deliverables: {current_deliverables:,.2f}")
     print(f"total_expected_deliverables: {total_deliverables:,.2f}")
     print(f"\n")
     
 def compute_final_data_based_on_input_selection(product_list, in_normal_or_discount_price_list, normal_or_discount_price, region_monthly_performance):
-
+    """
+    Print out the current deliverables and,
+    total expected deliverables based on the 
+    user decision, whereby either compute the final data,
+    with estimated discount or normal price, based on computation
+    of data and specified with second argument.
+    """
+    
     user_decision = int(input())
 
     current_deliverables = 0
