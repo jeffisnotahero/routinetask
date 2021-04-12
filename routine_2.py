@@ -6,7 +6,7 @@ import csv
 import sys
 from helper import *
 
-# Check command-line argument 
+# Check length of Command-line argument 
 if len(sys.argv) > 5 or len(sys.argv) < 4:
     print(f"""
                                             ----MUST FOLLOW THE ORDER OF INPUT OF CSV FILE!!!---- 
@@ -16,47 +16,47 @@ if len(sys.argv) > 5 or len(sys.argv) < 4:
         \n""")
     sys.exit(1)
 
-# Prompt user which data to be computed
+# Prompt user to choose which region data to be computed
 incoming_computed_data = int(input("Enter 1 if Korea data, Enter 2 if China data \n"))
+
+# Handling Korea region data
 if incoming_computed_data == 1:
 
-    # Create item list
+    # Create deliverable model name list
     item_name_list = create_item_name_list(sys.argv[1])
 
-    # Create item object and insert into list
+    # Create deliverable objects with each name from the model name list
     product_list = []
     for name in item_name_list:
         product_list.append(Deliverables(name))
 
-    # Add deliverables unit data 
+    # Add unit data for each deliverable
     add_deliverables_unit_data(sys.argv[1], product_list)
 
-    # Add discount price
+    # Add discount price for each deliverables 
     add_discount_price(sys.argv[2], product_list)
 
-    # Add normal price
+    # Add normal price for each deliverables 
     add_normal_price(sys.argv[3], product_list)
 
-    # Compute revenue data as of now
+    # Compute total revenue data for region as of now
     region_monthly_performance = Region("Region_monthly_performance")
     compute_revenue_data(sys.argv[4], region_monthly_performance)
     region_monthly_performance.print_info()
 
-    # Check if everything has discount price and compute immediately
+    # Compute the total deliverables if only each deliverables have their discount price
     is_discount_price_list_counter = check_all_deliverables_with_required_price(product_list, "in_discount_price_list")
-
     if is_discount_price_list_counter == 0:
         
         compute_total_deliverables_if_all_with_required_price(product_list, "estimated", region_monthly_performance)
 
-    # else handling
+    # Otherwise, compute the total deliverables with estimated discount price plugged in manually.
     else:
 
-        # Check and plug in estiamted discount price for those products without 
+        # Plug in estiamted discount price for each deliverables that does not have discount price
         prompt_user_plug_in_estimated_discount_price(product_list)
 
-        # prompt decision before compute final data
-        # Show user how many are item without normal and discount as well as item without discount only
+        # Prompt user to make a decision of computation of data
         check_total_numbers_unavailable_normal_or_discount_price(product_list, "in_discount_price_list")
 
         print(f"""
@@ -64,50 +64,50 @@ if incoming_computed_data == 1:
         1: Compute final data with available and newly estimated discount price, 
         2: Compute final data with only available discount price """)
 
+        # Compute the corresponding final data based on user's decision
         compute_final_data_based_on_input_selection(product_list, "in_discount_price_list", "estimated", region_monthly_performance)
 
-# Handle China data
+# Handling China region data
 else:
-    # Create item list
+    # Create deliverable model name list
     item_name_list = create_item_name_list(sys.argv[1])
 
-    # Create item object and insert into list
+    # Create deliverable objects with each name from the model name list
     product_list = []
     for name in item_name_list:
         product_list.append(Deliverables(name, in_discount_price_list=False))
 
-    # Add deliverables unit data
+    # Add unit data for each deliverable
     add_deliverables_unit_data(sys.argv[1], product_list)
 
-    # Add normal price
+    # Add discount price for each deliverables 
     add_normal_price(sys.argv[2], product_list)
 
-    # Compute revenue data as of now
+    # Compute total revenue data for region as of now
     region_monthly_performance = Region("Region_monthly_performance")
     compute_revenue_data(sys.argv[3], region_monthly_performance)
     region_monthly_performance.print_info()
 
-    # if everything has normal price compute immediately
+    # Compute the total deliverables if only each deliverables have their discount price
 
     is_normal_price_list_counter = check_all_deliverables_with_required_price(product_list, "in_normal_price_list")
-
     if is_normal_price_list_counter == 0:
         
         compute_total_deliverables_if_all_with_required_price(product_list, "normal_price", region_monthly_performance)
 
-    # else handling
+    # Otherwise, compute the total deliverables with estimated discount price plugged in manually.
     else:
         
-        # Check and plug in estiamted normal price for those products without 
+        # Plug in estiamted normal price for each deliverables that does not have normal price 
         prompt_user_plug_in_estimated_normal_price(product_list)
 
-        # prompt decision before compute final data
-        # Show user how many are item without normal price
+        # Prompt user to make a decision of computation of data
         check_total_numbers_unavailable_normal_or_discount_price(product_list, "in_normal_price_list")
-
+        
         print(f"""
         Enter 
         1: Compute final data with available and newly estimated normal price, 
         2: Compute final data with only available normal price """)
 
+        # Compute the corresponding final data based on user's decision
         compute_final_data_based_on_input_selection(product_list, "in_normal_price_list", "normal_price", region_monthly_performance)
