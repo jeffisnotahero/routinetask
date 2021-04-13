@@ -6,7 +6,10 @@ Description: Pseudocode for a program that takes differnt region's monthly booki
 
 Pre-condition:
 Prepare a list for China and Korea, which includes orders that is more than or equal to 500k JPY
+    -check and jot down into excel list whenever new CC order email come in.
 Prepare a list for China and Korea, which shows all customer buy a certain type of products.
+    -Korea : distributor name, model
+    -China : use the order list
 
 Korea China region revenue requirements:
 1) First get data below
