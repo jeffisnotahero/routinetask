@@ -111,3 +111,6 @@ else:
 
         # Compute the corresponding final data based on user's decision
         compute_final_data_based_on_input_selection(product_list, "in_normal_price_list", "normal_price", region_monthly_performance)
+
+        # For total deliverabels, show profit data
+        # Show booking data
