@@ -48,7 +48,7 @@ def create_name_list(commandline_argument_1, commandline_argument_2):
     name_list = []
 
     # Add name from both csv
-    with open(commandline_argument_1, "r", encoding="shift_jis") as revenue_database, open(commandline_argument_2, "r", encoding="shift_jis") as booking_database:
+    with open(commandline_argument_1, "r", encoding="utf-8_sig") as revenue_database, open(commandline_argument_2, "r", encoding="shift_jis") as booking_database:
 
         revenue_data = csv.reader(revenue_database)
         next(revenue_data)
@@ -206,7 +206,7 @@ def add_deliverables_unit_data(commandline_argument_1, product_list):
     each deliverable from product list,
     which specified by second argument
     """
-    with open(commandline_argument_1, "r") as deliverables_database:
+    with open(commandline_argument_1, "r", encoding="utf-8_sig") as deliverables_database:
 
             deliverables_data = csv.reader(deliverables_database)
             next(deliverables_data)
@@ -222,7 +222,7 @@ def add_discount_price(commandline_argument_2, product_list):
     deliverables and set in_discount_price_list to True,
     if there is none
     """
-    with open(commandline_argument_2, "r") as discount_price_list_database:
+    with open(commandline_argument_2, "r", encoding="utf-8_sig") as discount_price_list_database:
 
         discount_price_list_data = csv.reader(discount_price_list_database)
         next(discount_price_list_data)
@@ -247,7 +247,7 @@ def add_normal_price(commandline_argument, product_list):
     deliverables and set in_discount_price_list to True,
     if there is none
     """
-    with open(commandline_argument, "r") as normal_price_list_database:
+    with open(commandline_argument, "r", encoding="utf-8_sig") as normal_price_list_database:
         normal_price_list_data = csv.reader(normal_price_list_database)
         next(normal_price_list_data)
         normal_price_list = list(normal_price_list_data)
