@@ -250,7 +250,7 @@ def compute_net_sales(target_object):
     Return net sales data by finding the difference
     of object's, which is an argument, revenue and cost data
     """
-    net_sales = target_object._revenue - target_object._revenue_cost
+    net_sales = int(target_object._revenue) - int(target_object._revenue_cost)
     return net_sales
 
 def compute_net_profit_margin(target_object):
@@ -264,7 +264,7 @@ def compute_net_profit_margin(target_object):
         net_profit_margin = 0
         return net_profit_margin
     else:
-        net_profit_margin = target_object._net_sales_revenue / target_object._revenue
+        net_profit_margin = int(target_object._net_sales_revenue) / int(target_object._revenue)
         return net_profit_margin
 
 

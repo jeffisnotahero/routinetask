@@ -77,7 +77,7 @@ class Booking:
         """
         Returns net profit margin booking
         """
-        return self.net_profit_margin_booking
+        return self._net_profit_margin_booking
 
     def set_distributor(self, new_distributor):
         """
@@ -119,19 +119,13 @@ class Booking:
         """
         Set net sales booking data to a new value 
         """
-        self.net_sales_booking = new_net_sales_booking
+        self._net_sales_booking = new_net_sales_booking
 
     def set_net_profit_margin_booking(self, new_net_profit_margin_booking):
         """
         Set net profit margin booking to a new value
         """
-        self.net_profit_margin_booking = new_net_profit_margin_booking
-
-    def set_net_profit_margin_booking(self, new_net_profit_margin_booking):
-        """
-        Set net profit margin booking to a new value
-        """
-        self.net_profit_margin_booking = new_net_profit_margin_booking
+        self._net_profit_margin_booking = new_net_profit_margin_booking
 
     def set_currency_adjustment_boolean(self, boolean):
         """
@@ -201,13 +195,13 @@ class Revenue:
         """
         Returns net sales revenue data
         """
-        return self.net_sales_revenue
+        return self._net_sales_revenue
 
     def get_net_profit_margin_revenue(self):
         """
         Returns net profit margin revenue
         """
-        return self.net_profit_margin_revenue
+        return self._net_profit_margin_revenue
 
     def set_distributor(self, new_distributor):
         """
@@ -281,12 +275,12 @@ for each_data in extract_revenue_list:
     #     self._net_sales_revenue = 0
     #     self._net_profit_margin_revenue = 0
 
-    region_net_sales = compute_net_sales(region_monthly_performance) # Compute Region's Net sales
-    update_net_sales(region_monthly_performance, region_net_sales) # Update Region's Net sales
+    net_sales = compute_net_sales(each_data) # Compute Net sales
+    update_net_sales(each_data, net_sales) # Update Net sales
 
-    region_net_profit_margin_non_percentage = compute_net_profit_margin(region_monthly_performance) # Compute Region's Net profit margin
-    region_net_profit_margin = format_value_with_percentage(region_net_profit_margin_non_percentage) # Format value with percentage
-    update_net_profit_margin(region_monthly_performance, region_net_profit_margin) # Update Region's Net profit margin
+    net_profit_margin_non_percentage = compute_net_profit_margin(each_data) # Compute Net profit margin
+    net_profit_margin = format_value_with_percentage(net_profit_margin_non_percentage) # Format value with percentage
+    update_net_profit_margin(each_data, net_profit_margin) # Update Net profit margin
 
 
 print(extract_revenue_list)
@@ -296,4 +290,7 @@ for x in extract_revenue_list:
     print(f"{x.get_product_model()}")
     print(f"{x.get_order_date()}")
     print(f"{x.get_customer_order_number()}")
+    print(f"{int(x.get_net_sales_revenue()):,}")
+    print(f"{(x.get_net_profit_margin_revenue())}")
+
     
