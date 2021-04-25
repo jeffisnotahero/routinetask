@@ -91,6 +91,39 @@ class Region(MonthlyPerformance):
     """
     pass
 
+def compute_booking_list(commandline_argument):
+    """
+    Returns a list of booking data opening booking data file with
+    first parameter
+    """
+    # Open booking CSV and read everything into memory
+    with open(commandline_argument, "r", encoding="shift_jis") as database:
+
+        # row[0] : "distributor"
+        # row[12] : "booking"
+        # row[13] : "cost"
+        booking_data = csv.reader(database)
+        next(booking_data)
+        list_booking_data = list(booking_data)
+        return list_booking_data
+
+def compute_revenue_list(commandline_argument):
+        """
+        Returns a list of revenue data opening revenue data file with
+        first parameter
+        """
+        # Open revenue CSV and read everything into memory
+        with open(commandline_argument, "r", encoding="shift_jis") as database:
+
+            # row[0] : "distributor"
+            # row[12] : "revenue"
+            # row[13] : "cost"
+            revenue_data = csv.reader(database)
+
+            next(revenue_data) # Skip first row (Description row)
+            list_revenue_data = list(revenue_data) # Convert csv data to list 
+            return list_revenue_data
+
 def create_name_list(commandline_argument_1, commandline_argument_2):
     """
     Return a Distributor name list from Revenue csv file and Booking csv file,
@@ -98,42 +131,33 @@ def create_name_list(commandline_argument_1, commandline_argument_2):
     """
     name_list = []
 
-    # Add name from both csv
-    with open(commandline_argument_1, "r", encoding="shift_jis") as revenue_database, open(commandline_argument_2, "r", encoding="shift_jis") as booking_database:
+     # Populate name list
+    list_revenue_data = compute_revenue_list(commandline_argument_1)
+    for row in list_revenue_data:
+        same_name = False
 
-        revenue_data = csv.reader(revenue_database)
-        next(revenue_data)
-        list_revenue_data = list(revenue_data)
+        # Check if there is same name
+        for items in name_list:
+            if items == row[0]:
+                same_name = True
+        
+        # Insert into list if there is not
+        if same_name == False:
+            name_list.append(row[0])
 
-        # Populate name list
-        for row in list_revenue_data:
-            same_name = False
+    # Populate name list
+    list_booking_data = compute_booking_list(commandline_argument_2)
+    for row in list_booking_data:
+        same_name = False
 
-            # Check if there is same name
-            for items in name_list:
-                if items == row[0]:
-                    same_name = True
-            
-            # Insert into list if there is not
-            if same_name == False:
-                name_list.append(row[0])
-
-        booking_data = csv.reader(booking_database)
-        next(booking_data)
-        list_booking_data = list(booking_data)
-
-        # Populate name list
-        for row in list_booking_data:
-            same_name = False
-
-            # Check if there is same name
-            for items in name_list:
-                if items == row[0]:
-                    same_name = True
-            
-            # Insert into list if there is not
-            if same_name == False:
-                name_list.append(row[0])
+        # Check if there is same name
+        for items in name_list:
+            if items == row[0]:
+                same_name = True
+        
+        # Insert into list if there is not
+        if same_name == False:
+            name_list.append(row[0])
 
     return name_list
 
@@ -364,39 +388,6 @@ def add_normal_price(commandline_argument, product_list):
                 product.normal_price = product.unit * float(product_from_normal_list[2]) # [2] => price column
                 product.in_normal_price_list = True
                 break
-
-def compute_booking_list(commandline_argument):
-    """
-    Returns a list of booking data opening booking data file with
-    first parameter
-    """
-    # Open booking CSV and read everything into memory
-    with open(commandline_argument, "r", encoding="shift_jis") as database:
-
-        # row[0] : "distributor"
-        # row[12] : "booking"
-        # row[13] : "cost"
-        booking_data = csv.reader(database)
-        next(booking_data)
-        list_booking_data = list(booking_data)
-        return list_booking_data
-
-def compute_revenue_list(commandline_argument):
-        """
-        Returns a list of revenue data opening revenue data file with
-        first parameter
-        """
-        # Open revenue CSV and read everything into memory
-        with open(commandline_argument, "r", encoding="shift_jis") as database:
-
-            # row[0] : "distributor"
-            # row[12] : "revenue"
-            # row[13] : "cost"
-            revenue_data = csv.reader(database)
-
-            next(revenue_data) # Skip first row (Description row)
-            list_revenue_data = list(revenue_data) # Convert csv data to list 
-            return list_revenue_data
 
 def compute_revenue_data(commandline_argument, region_monthly_performance):
     """
