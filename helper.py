@@ -4,60 +4,60 @@ class MonthlyPerformance:
     """
     Parent class for Monthly Performance
     """
-    def __init__(self, name, booking=0, revenue=0, cost=0, net_sales=0, net_profit_margin=0, booking_cost=0, net_sales_booking=0, net_profit_margin_booking=0):
-        self.name = name
-        self.booking = booking
-        self.revenue = revenue
-        self.cost = cost
-        self.net_sales = net_sales
-        self.net_profit_margin = net_profit_margin
+    def __init__(self, name, booking=0, revenue=0, revenue_cost=0, net_sales_revenue=0, net_profit_margin_revenue=0, booking_cost=0, net_sales_booking=0, net_profit_margin_booking=0):
+        self._name = name
+        self._booking = booking
+        self._revenue = revenue
+        self._revenue_cost = revenue_cost
+        self._net_sales_revenue = net_sales_revenue
+        self._net_profit_margin_revenue = net_profit_margin_revenue
         self._booking_cost = booking_cost
         self._net_sales_booking = net_sales_booking
         self._net_profit_margin_booking = net_profit_margin_booking
 
     def __repr__(self):
-        return self.name
+        return self._name
 
     def print_info(self):
 
         print(f"""
-        {self.name}\n
-        Booking:            {self.booking:,} 
-        Revenue:            {self.revenue:,} 
-        Cost:               {self.cost:,} 
-        Net sales:          {self.net_sales:,}
-        Net profit margin:  {self.net_profit_margin}\n
+        {self._name}\n
+        Booking:            {self._booking:,} 
+        Revenue:            {self._revenue:,} 
+        Cost:               {self._revenue_cost:,} 
+        Net sales:          {self._net_sales_revenue:,}
+        Net profit margin:  {self._net_profit_margin_revenue}\n
         """, end='')
     
     def get_revenue(self):
         """
         Returns revenue data
         """
-        return self.revenue
+        return self._revenue
     
     def get_cost(self):
         """
         Returns revenue cost data
         """
-        return self.cost
+        return self._revenue_cost
 
     def get_net_sales_revenue(self):
         """
         Returns net sales for revenue
         """
-        return self.net_sales
+        return self._net_sales_revenue
 
     def get_net_profit_margin_revenue(self):
         """
         Returns net profitmargin for revenue
         """
-        return self.net_profit_margin
+        return self._net_profit_margin_revenue
 
     def get_booking(self):
         """
         Returns booking data
         """
-        return self.booking
+        return self._booking
 
     def get_booking_cost(self):
         """
@@ -108,21 +108,21 @@ def compute_booking_list(commandline_argument):
         return list_booking_data
 
 def compute_revenue_list(commandline_argument):
-        """
-        Returns a list of revenue data opening revenue data file with
-        first parameter
-        """
-        # Open revenue CSV and read everything into memory
-        with open(commandline_argument, "r", encoding="shift_jis") as database:
+    """
+    Returns a list of revenue data opening revenue data file with
+    first parameter
+    """
+    # Open revenue CSV and read everything into memory
+    with open(commandline_argument, "r", encoding="shift_jis") as database:
 
-            # row[0] : "distributor"
-            # row[12] : "revenue"
-            # row[13] : "cost"
-            revenue_data = csv.reader(database)
+        # row[0] : "distributor"
+        # row[12] : "revenue"
+        # row[13] : "cost"
+        revenue_data = csv.reader(database)
 
-            next(revenue_data) # Skip first row (Description row)
-            list_revenue_data = list(revenue_data) # Convert csv data to list 
-            return list_revenue_data
+        next(revenue_data) # Skip first row (Description row)
+        list_revenue_data = list(revenue_data) # Convert csv data to list 
+        return list_revenue_data
 
 def create_name_list(commandline_argument_1, commandline_argument_2):
     """
@@ -166,9 +166,9 @@ def update_revenue_and_cost(target_object, row):
     Update the Distributor's revenue and cost data
     """
     revenue = row[12]
-    target_object.revenue += int(revenue)
+    target_object._revenue += int(revenue)
     cost = row[13]
-    target_object.cost += int(cost)
+    target_object._revenue_cost += int(cost)
 
 def set_booking_cost(target_object, row):
     """
@@ -182,14 +182,15 @@ def set_booking(target_object, row):
     Update booking amount
     """
     booking = row[12] # Booking amount at 12th column
-    target_object.booking += int(booking)
+    target_object._booking += int(booking)
+
 
 def compute_net_sales_booking(target_object):
     """
     Return net sales booking data by finding the difference
     of object's, which is an argument, revenue and cost data
     """
-    net_sales_booking = target_object.booking - target_object._booking_cost
+    net_sales_booking = target_object._booking - target_object._booking_cost
     return net_sales_booking
 
 def set_net_sales_booking(target_object, net_sales_booking):
@@ -206,11 +207,11 @@ def compute_net_profit_margin_booking(target_object):
     """
 
     # Check if division by zero (aka distributor.revenue == 0)
-    if target_object.booking == 0:
+    if target_object._booking == 0:
         net_profit_margin_booking = 0
         return net_profit_margin_booking
     else:
-        net_profit_margin_booking = target_object._net_sales_booking / target_object.booking
+        net_profit_margin_booking = target_object._net_sales_booking / target_object._booking
         return net_profit_margin_booking
 
 def set_net_profit_margin_booking(target_object, profit_margin_booking):
@@ -225,26 +226,31 @@ def update_booking(target_object, row):
     Update Distributor or Region's booking data
     """
     booking = row[12]
-    target_object.booking += int(booking)
+    target_object._booking += int(booking)
+
+
+
+
+
 
 def update_net_sales(target_object, net_sales):
     """
     Update Distributor or Region's net sales data
     """
-    target_object.net_sales = net_sales
+    target_object._net_sales_revenue = net_sales
 
 def update_net_profit_margin(target_object, profit_margin):
     """
     Update Distributor or Region's profit margin data
     """
-    target_object.net_profit_margin = profit_margin
+    target_object._net_profit_margin_revenue = profit_margin
 
 def compute_net_sales(target_object):
     """
     Return net sales data by finding the difference
     of object's, which is an argument, revenue and cost data
     """
-    net_sales = target_object.revenue - target_object.cost
+    net_sales = target_object._revenue - target_object._revenue_cost
     return net_sales
 
 def compute_net_profit_margin(target_object):
@@ -253,14 +259,19 @@ def compute_net_profit_margin(target_object):
     object's, which is an argument, net sales data with
     revenue data.
     """
-
     # Check if division by zero (aka distributor.revenue == 0)
-    if target_object.revenue == 0:
+    if target_object._revenue == 0:
         net_profit_margin = 0
         return net_profit_margin
     else:
-        net_profit_margin = target_object.net_sales / target_object.revenue
+        net_profit_margin = target_object._net_sales_revenue / target_object._revenue
         return net_profit_margin
+
+
+
+
+
+
 
 def format_value_with_percentage(original_value):
     """
@@ -538,7 +549,7 @@ def compute_final_data_based_on_input_selection(product_list, in_normal_or_disco
                 current_deliverables += getattr(product, normal_or_discount_price)
 
         jpy_current_deliverables = currency_conversion(current_deliverables, 109) # Convert to JPY currency
-        total_deliverables = jpy_current_deliverables + region_monthly_performance.revenue
+        total_deliverables = jpy_current_deliverables + region_monthly_performance._revenue
 
         for product in product_list:
             if getattr(product, in_normal_or_discount_price_list) == False:
@@ -554,7 +565,7 @@ def compute_final_data_based_on_input_selection(product_list, in_normal_or_disco
                 current_deliverables += getattr(product, normal_or_discount_price)
 
         jpy_current_deliverables = currency_conversion(current_deliverables, 109) # Convert to JPY currency
-        total_deliverables = jpy_current_deliverables + region_monthly_performance.revenue
+        total_deliverables = jpy_current_deliverables + region_monthly_performance._revenue
 
         for product in product_list:
             if getattr(product, in_normal_or_discount_price_list)  == False:

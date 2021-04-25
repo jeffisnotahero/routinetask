@@ -14,7 +14,7 @@ class Booking:
     and boolean to check if it is currency adjustment order.
     """
 
-    def __init__(self, distributor, product_model, order_date, customer_order_number, booking, booking_cost, net_sales_booking, net_profit_margin_booking):
+    def __init__(self, distributor, product_model, order_date, customer_order_number, booking, booking_cost):
         """
         Initialize data members for 
         distributor, product model, order date,
@@ -27,8 +27,8 @@ class Booking:
         self._customer_order_number
         self._booking = booking
         self._booking_cost = booking_cost
-        self._net_sales_booking = net_sales_booking
-        self._net_profit_margin_booking = net_profit_margin_booking
+        self._net_sales_booking = 0
+        self._net_profit_margin_booking = 0
         self._is_currency_adjustment = False
 
     def get_distributor(self):
@@ -146,7 +146,7 @@ class Revenue:
     customer order number, cost, net sales, profit margin.
     """
 
-    def __init__(self, distributor, product_model, order_date, customer_order_number, revenue, revenue_cost, net_sales_revenue, net_profit_margin_revenue):
+    def __init__(self, distributor, product_model, order_date, customer_order_number, revenue, revenue_cost):
         """
         Initialize data member for 
         distributor, product model, order date,
@@ -158,8 +158,8 @@ class Revenue:
         self._customer_order_number = customer_order_number
         self._revenue = revenue
         self._revenue_cost = revenue_cost
-        self._net_sales_revenue = net_sales_revenue
-        self._net_profit_margin_revenue = net_profit_margin_revenue
+        self._net_sales_revenue = 0
+        self._net_profit_margin_revenue = 0
             
     def get_distributor(self):
         """
@@ -259,5 +259,41 @@ class Revenue:
 
 
 # Revenue
-list_revenue_data = compute_revenue_list("korearevenue.csv")
+list_revenue_data = compute_revenue_list("cslrevenue.csv")
 
+extract_revenue_list = []
+
+print(extract_revenue_list)
+
+for row in list_revenue_data:
+    if int(row[12]) >= 500000: # Index 12th => Revenue
+        extract_revenue_list.append(Revenue(row[0], row[9], row[15], row[25], row[12], row[13]))
+
+for each_data in extract_revenue_list:
+    
+    # (self, distributor, product_model, order_date, customer_order_number, revenue, revenue_cost)
+    #     self._distributor = distributor
+    #     self._product_model = product_model
+    #     self._order_date = order_date
+    #     self._customer_order_number = customer_order_number
+    #     self._revenue = revenue
+    #     self._revenue_cost = revenue_cost
+    #     self._net_sales_revenue = 0
+    #     self._net_profit_margin_revenue = 0
+
+    region_net_sales = compute_net_sales(region_monthly_performance) # Compute Region's Net sales
+    update_net_sales(region_monthly_performance, region_net_sales) # Update Region's Net sales
+
+    region_net_profit_margin_non_percentage = compute_net_profit_margin(region_monthly_performance) # Compute Region's Net profit margin
+    region_net_profit_margin = format_value_with_percentage(region_net_profit_margin_non_percentage) # Format value with percentage
+    update_net_profit_margin(region_monthly_performance, region_net_profit_margin) # Update Region's Net profit margin
+
+
+print(extract_revenue_list)
+for x in extract_revenue_list:
+    print(f"{int(x.get_revenue()):,}")
+    print(f"{int(x.get_revenue_cost()):,}")
+    print(f"{x.get_product_model()}")
+    print(f"{x.get_order_date()}")
+    print(f"{x.get_customer_order_number()}")
+    
