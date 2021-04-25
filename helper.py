@@ -99,7 +99,7 @@ def create_name_list(commandline_argument_1, commandline_argument_2):
     name_list = []
 
     # Add name from both csv
-    with open(commandline_argument_1, "r", encoding="utf-8_sig") as revenue_database, open(commandline_argument_2, "r", encoding="shift_jis") as booking_database:
+    with open(commandline_argument_1, "r", encoding="shift_jis") as revenue_database, open(commandline_argument_2, "r", encoding="shift_jis") as booking_database:
 
         revenue_data = csv.reader(revenue_database)
         next(revenue_data)
@@ -194,7 +194,6 @@ def set_net_profit_margin_booking(target_object, profit_margin_booking):
     Update Distributor or Region's profit margin booking data
     """
     target_object._net_profit_margin_booking = profit_margin_booking
-
 
 
 def update_booking(target_object, row):
@@ -382,33 +381,41 @@ def compute_booking_list(commandline_argument):
         list_booking_data = list(booking_data)
         return list_booking_data
 
+def compute_revenue_list(commandline_argument):
+        """
+        Returns a list of revenue data opening revenue data file with
+        first parameter
+        """
+        # Open revenue CSV and read everything into memory
+        with open(commandline_argument, "r", encoding="shift_jis") as database:
+
+            # row[0] : "distributor"
+            # row[12] : "revenue"
+            # row[13] : "cost"
+            revenue_data = csv.reader(database)
+
+            next(revenue_data) # Skip first row (Description row)
+            list_revenue_data = list(revenue_data) # Convert csv data to list 
+            return list_revenue_data
+
 def compute_revenue_data(commandline_argument, region_monthly_performance):
     """
     Compute revenue data with revenue csv file specified by first argument,
     and add the data into Region Monthly Performance object
     """
-    # Open revenue CSV and read everything into memory
-    with open(commandline_argument, "r", encoding="shift_jis") as database:
+    list_revenue_data = compute_revenue_list(commandline_argument)
 
-        # row[0] : "distributor"
-        # row[12] : "revenue"
-        # row[13] : "cost"
-        revenue_data = csv.reader(database)
+    # Compute Region Monthly Total Booking
+    for row in list_revenue_data:
 
-        next(revenue_data) # Skip first row (Description row)
-        list_revenue_data = list(revenue_data) # Convert csv data to list 
+        update_revenue_and_cost(region_monthly_performance, row)
+    
+    region_net_sales = compute_net_sales(region_monthly_performance) # Compute Region's Net sales
+    update_net_sales(region_monthly_performance, region_net_sales) # Update Region's Net sales
 
-        # Compute Region Monthly Total Booking
-        for row in list_revenue_data:
-
-            update_revenue_and_cost(region_monthly_performance, row)
-        
-        region_net_sales = compute_net_sales(region_monthly_performance) # Compute Region's Net sales
-        update_net_sales(region_monthly_performance, region_net_sales) # Update Region's Net sales
-
-        region_net_profit_margin_non_percentage = compute_net_profit_margin(region_monthly_performance) # Compute Region's Net profit margin
-        region_net_profit_margin = format_value_with_percentage(region_net_profit_margin_non_percentage) # Format value with percentage
-        update_net_profit_margin(region_monthly_performance, region_net_profit_margin) # Update Region's Net profit margin
+    region_net_profit_margin_non_percentage = compute_net_profit_margin(region_monthly_performance) # Compute Region's Net profit margin
+    region_net_profit_margin = format_value_with_percentage(region_net_profit_margin_non_percentage) # Format value with percentage
+    update_net_profit_margin(region_monthly_performance, region_net_profit_margin) # Update Region's Net profit margin
 
 def currency_conversion(price_amount, conversion_rate):
     """

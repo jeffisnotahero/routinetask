@@ -37,61 +37,46 @@ for name in name_list:
 region_monthly_performance = Region("Region_monthly_performance")
 
 # Open revenue CSV and read everything into memory
-with open(sys.argv[1], "r", encoding="shift_jis") as database:
-
-    # row[0] : "distributor"
-    # row[12] : "revenue"
-    # row[13] : "cost"
-    revenue_data = csv.reader(database)
-
-    next(revenue_data) # Skip first row (Description row)
-    list_revenue_data = list(revenue_data) # Convert csv data to list 
+list_revenue_data = compute_revenue_list(sys.argv[1])
     
-    # Compute Monthly Distributors' Revenue & Cost data
-    for distributor in distributor_list:
+# Compute Monthly Distributors' Revenue & Cost data
+for distributor in distributor_list:
 
-        for row in list_revenue_data:
+    for row in list_revenue_data:
 
-            # Update each distributors' data
-            if row[0] == distributor.name:    
-                update_revenue_and_cost(distributor, row)
+        # Update each distributors' data
+        if row[0] == distributor.name:    
+            update_revenue_and_cost(distributor, row)
 
-    # Compute each distributors' Net sales data & Net profit margin
-    for distributor in distributor_list:
+# Compute each distributors' Net sales data & Net profit margin
+for distributor in distributor_list:
 
-        distributor_net_sales = compute_net_sales(distributor) # Compute distributors' Net sales
-        update_net_sales(distributor, distributor_net_sales) # Update distributors' Net sales
+    distributor_net_sales = compute_net_sales(distributor) # Compute distributors' Net sales
+    update_net_sales(distributor, distributor_net_sales) # Update distributors' Net sales
 
-        distributor_net_profit_margin_non_percentage = compute_net_profit_margin(distributor) # Compute distributtors' Net profit margin
-        distsributor_net_profit_margin = format_value_with_percentage(distributor_net_profit_margin_non_percentage) # Format value with percentage
-        update_net_profit_margin(distributor, distsributor_net_profit_margin) # Update distributors' Net profit margin
+    distributor_net_profit_margin_non_percentage = compute_net_profit_margin(distributor) # Compute distributtors' Net profit margin
+    distsributor_net_profit_margin = format_value_with_percentage(distributor_net_profit_margin_non_percentage) # Format value with percentage
+    update_net_profit_margin(distributor, distsributor_net_profit_margin) # Update distributors' Net profit margin
 
 # Compute Region Monthly Total Revenue
 compute_revenue_data(sys.argv[1], region_monthly_performance)
 
 # Open booking CSV and read everything into memory
-with open(sys.argv[2], "r", encoding="shift_jis") as database:
+list_booking_data = compute_booking_list(sys.argv[2])
 
-    # row[0] : "distributor"
-    # row[12] : "booking"
-    # row[13] : "cost"
-    booking_data = csv.reader(database)
-    next(booking_data)
-    list_booking_data = list(booking_data)
+# Compute Monthly Distributors' Revenue & Cost data
+for distributor in distributor_list:
 
-    # Compute Monthly Distributors' Revenue & Cost data
-    for distributor in distributor_list:
-
-        for row in list_booking_data:
-
-            # Update each distributors' data
-            if row[0] == distributor.name:    
-                update_booking(distributor, row)
-
-    # Compute Region Monthly Total Booking
     for row in list_booking_data:
 
-        update_booking(region_monthly_performance, row)
+        # Update each distributors' data
+        if row[0] == distributor.name:    
+            update_booking(distributor, row)
+
+# Compute Region Monthly Total Booking
+for row in list_booking_data:
+
+    update_booking(region_monthly_performance, row)
 
 # Print all region & distributor info
 for distributor in distributor_list:
