@@ -4,13 +4,16 @@ class MonthlyPerformance:
     """
     Parent class for Monthly Performance
     """
-    def __init__(self, name, booking=0, revenue=0, cost=0, net_sales=0, net_profit_margin=0):
+    def __init__(self, name, booking=0, revenue=0, cost=0, net_sales=0, net_profit_margin=0, booking_cost=0, net_sales_booking=0, net_profit_margin_booking=0):
         self.name = name
         self.booking = booking
         self.revenue = revenue
         self.cost = cost
         self.net_sales = net_sales
         self.net_profit_margin = net_profit_margin
+        self._booking_cost = booking_cost
+        self._net_sales_booking = net_sales_booking
+        self._net_profit_margin_booking = net_profit_margin_booking
 
     def __repr__(self):
         return self.name
@@ -25,6 +28,54 @@ class MonthlyPerformance:
         Net sales:          {self.net_sales:,}
         Net profit margin:  {self.net_profit_margin}\n
         """, end='')
+    
+    def get_revenue(self):
+        """
+        Returns revenue data
+        """
+        return self.revenue
+    
+    def get_cost(self):
+        """
+        Returns revenue cost data
+        """
+        return self.cost
+
+    def get_net_sales_revenue(self):
+        """
+        Returns net sales for revenue
+        """
+        return self.net_sales
+
+    def get_net_profit_margin_revenue(self):
+        """
+        Returns net profitmargin for revenue
+        """
+        return self.net_profit_margin
+
+    def get_booking(self):
+        """
+        Returns booking data
+        """
+        return self.booking
+
+    def get_booking_cost(self):
+        """
+        Returns booking cost
+        """
+        return self._booking_cost
+    
+    def get_net_sales_booking(self):
+        """
+        Returns net sales for booking
+        """
+        return self._net_sales_booking
+
+    def get_net_profit_margin_booking(self):
+        """
+        Returns net profit margin for booking
+        """
+        return self._net_profit_margin_booking
 
 class Distributor(MonthlyPerformance):
     """
@@ -94,6 +145,57 @@ def update_revenue_and_cost(target_object, row):
     target_object.revenue += int(revenue)
     cost = row[13]
     target_object.cost += int(cost)
+
+def set_booking_cost(target_object, row):
+    """
+    Update the booking cost
+    """
+    cost = row[13] # Cost amount at 13th column
+    target_object._booking_cost += int(cost)
+
+def set_booking(target_object, row):
+    """
+    Update booking amount
+    """
+    booking = row[12] # Booking amount at 12th column
+    target_object.booking += int(booking)
+
+def compute_net_sales_booking(target_object):
+    """
+    Return net sales booking data by finding the difference
+    of object's, which is an argument, revenue and cost data
+    """
+    net_sales_booking = target_object.booking - target_object._booking_cost
+    return net_sales_booking
+
+def set_net_sales_booking(target_object, net_sales_booking):
+    """
+    Update Distributor or Region's net sales booking data
+    """
+    target_object._net_sales_booking = net_sales_booking
+
+def compute_net_profit_margin_booking(target_object):
+    """
+    Return net profit margin booking data by dividing the 
+    object's, which is an argument, net sales data with
+    revenue data.
+    """
+
+    # Check if division by zero (aka distributor.revenue == 0)
+    if target_object.booking == 0:
+        net_profit_margin_booking = 0
+        return net_profit_margin_booking
+    else:
+        net_profit_margin_booking = target_object._net_sales_booking / target_object.booking
+        return net_profit_margin_booking
+
+def set_net_profit_margin_booking(target_object, profit_margin_booking):
+    """
+    Update Distributor or Region's profit margin booking data
+    """
+    target_object._net_profit_margin_booking = profit_margin_booking
+
+
 
 def update_booking(target_object, row):
     """
@@ -263,6 +365,22 @@ def add_normal_price(commandline_argument, product_list):
                 product.normal_price = product.unit * float(product_from_normal_list[2]) # [2] => price column
                 product.in_normal_price_list = True
                 break
+
+def compute_booking_list(commandline_argument):
+    """
+    Returns a list of booking data opening booking data file with
+    first parameter
+    """
+    # Open booking CSV and read everything into memory
+    with open(commandline_argument, "r", encoding="shift_jis") as database:
+
+        # row[0] : "distributor"
+        # row[12] : "booking"
+        # row[13] : "cost"
+        booking_data = csv.reader(database)
+        next(booking_data)
+        list_booking_data = list(booking_data)
+        return list_booking_data
 
 def compute_revenue_data(commandline_argument, region_monthly_performance):
     """
@@ -445,3 +563,5 @@ def compute_final_data_based_on_input_selection(product_list, in_normal_or_disco
                 product.print_info()
 
         print_current_and_total_expected_deliverables(jpy_current_deliverables, total_deliverables)
+
+
