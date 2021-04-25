@@ -10,8 +10,8 @@ from helper import *
 if len(sys.argv) > 5 or len(sys.argv) < 4:
     print(f"""
                                             ----MUST FOLLOW THE ORDER OF INPUT OF CSV FILE!!!---- 
-        Usage: python routine.py 'DELIVERABLES'.csv, 'DSICOUNT PRICE LIST'.csv, 'NORMAL PRICE LIST'.csv, 'REVENUE AS OF NOW'.csv for Korea data;
-        Usage: python routine.py 'DELIVERABLES'.csv, 'NORMAL PRICE LIST'.csv, 'REVENUE AS OF NOW'.csv for China data
+        Usage: python routine_2.py 'DELIVERABLES'.csv, 'DSICOUNT PRICE LIST'.csv, 'NORMAL PRICE LIST'.csv, 'REVENUE AS OF NOW'.csv for Korea data;
+        Usage: python routine_2.py 'DELIVERABLES'.csv, 'NORMAL PRICE LIST'.csv, 'REVENUE AS OF NOW'.csv for China data
                                             ----MUST FOLLOW THE ORDER OF INPUT OF CSV FILE!!!---- 
         \n""")
     sys.exit(1)
