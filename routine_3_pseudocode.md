@@ -96,9 +96,17 @@ Populate Revenue data:
         -if booking <= -500k 
             -append over_500k_booking_list with (over_500k_booking object( distributor, product model, order date, customer order number, booking, cost))
 
-    -loop over_500k_booking_list
-        if booking >= 500k AND customer order number == booking =< 500k AND customer order number:
-            both is_currency_adjustment == True
+    -create a list of order number with positive booking amount orders
+    
+    -loop through list of order number
+        - amount_list = [booking amount ; loop through list booking data ; if order number in list] booking data
+            -loop through amount list
+                -total = 0
+                -total += amount
+            -if total > 0
+                -loop through list booking data
+                    -if orders number == order number
+                        -is_currency_adjustnment = False
     
     -loop over_500k_booking_list
         -if both is_currency_adjustnment == False
