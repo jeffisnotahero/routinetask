@@ -190,7 +190,7 @@ def compute_net_sales_booking(target_object):
     Return net sales booking data by finding the difference
     of object's, which is an argument, revenue and cost data
     """
-    net_sales_booking = target_object._booking - target_object._booking_cost
+    net_sales_booking = int(target_object._booking) - int(target_object._booking_cost)
     return net_sales_booking
 
 def set_net_sales_booking(target_object, net_sales_booking):
@@ -211,7 +211,7 @@ def compute_net_profit_margin_booking(target_object):
         net_profit_margin_booking = 0
         return net_profit_margin_booking
     else:
-        net_profit_margin_booking = target_object._net_sales_booking / target_object._booking
+        net_profit_margin_booking = int(target_object._net_sales_booking) / int(target_object._booking)
         return net_profit_margin_booking
 
 def set_net_profit_margin_booking(target_object, profit_margin_booking):

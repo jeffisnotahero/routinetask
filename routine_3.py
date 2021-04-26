@@ -11,7 +11,8 @@ class Booking:
     Represents the booking data with data member such as 
     distributor, product model, order date,
     customer order number, cost, net sales, profit margin 
-    and boolean to check if it is currency adjustment order.
+    and boolean to check if it is currency adjustment order,
+    which default value is True.
     """
 
     def __init__(self, distributor, product_model, order_date, customer_order_number, booking, booking_cost):
@@ -24,12 +25,12 @@ class Booking:
         self._distributor = distributor
         self._product_model = product_model
         self._order_date = order_date
-        self._customer_order_number
+        self._customer_order_number = customer_order_number
         self._booking = booking
         self._booking_cost = booking_cost
         self._net_sales_booking = 0
         self._net_profit_margin_booking = 0
-        self._is_currency_adjustment = False
+        self._is_currency_adjustment = True
 
     def get_distributor(self):
         """
@@ -71,7 +72,7 @@ class Booking:
         """
         Returns net sales booking data
         """
-        return self.net_sales_booking
+        return self._net_sales_booking
 
     def get_net_profit_margin_booking(self):
         """
@@ -132,6 +133,12 @@ class Booking:
         Update currency adjustment boolean
         """
         self._is_currency_adjustment = boolean
+
+    def get_currency_adjustment_boolean(self):
+        """
+        Returns currency adjustment boolean data
+        """
+        return self._is_currency_adjustment
 
 class Revenue:
     """
@@ -257,23 +264,11 @@ list_revenue_data = compute_revenue_list("cslrevenue.csv")
 
 extract_revenue_list = []
 
-print(extract_revenue_list)
-
 for row in list_revenue_data:
     if int(row[12]) >= 500000: # Index 12th => Revenue
-        extract_revenue_list.append(Revenue(row[0], row[9], row[15], row[25], row[12], row[13]))
+        extract_revenue_list.append(Revenue(row[0], row[9], row[15], row[24], row[12], row[13]))
 
 for each_data in extract_revenue_list:
-    
-    # (self, distributor, product_model, order_date, customer_order_number, revenue, revenue_cost)
-    #     self._distributor = distributor
-    #     self._product_model = product_model
-    #     self._order_date = order_date
-    #     self._customer_order_number = customer_order_number
-    #     self._revenue = revenue
-    #     self._revenue_cost = revenue_cost
-    #     self._net_sales_revenue = 0
-    #     self._net_profit_margin_revenue = 0
 
     net_sales = compute_net_sales(each_data) # Compute Net sales
     update_net_sales(each_data, net_sales) # Update Net sales
@@ -282,15 +277,67 @@ for each_data in extract_revenue_list:
     net_profit_margin = format_value_with_percentage(net_profit_margin_non_percentage) # Format value with percentage
     update_net_profit_margin(each_data, net_profit_margin) # Update Net profit margin
 
+# for x in extract_revenue_list:
+#     print(f"{int(x.get_revenue()):,}")
+#     print(f"{int(x.get_revenue_cost()):,}")
+#     print(f"{x.get_product_model()}")
+#     print(f"{x.get_order_date()}")
+#     print(f"{x.get_customer_order_number()}")
+#     print(f"{int(x.get_net_sales_revenue()):,}")
+#     print(f"{(x.get_net_profit_margin_revenue())}")
 
-print(extract_revenue_list)
-for x in extract_revenue_list:
-    print(f"{int(x.get_revenue()):,}")
-    print(f"{int(x.get_revenue_cost()):,}")
-    print(f"{x.get_product_model()}")
-    print(f"{x.get_order_date()}")
-    print(f"{x.get_customer_order_number()}")
-    print(f"{int(x.get_net_sales_revenue()):,}")
-    print(f"{(x.get_net_profit_margin_revenue())}")
+# Booking
+list_booking_data = compute_booking_list("koreabooking.csv")
 
-    
+extract_booking_list = []
+
+# >= 500,000
+for row in list_booking_data:
+    if int(row[12]) >= 500000: # Index 12th => Revenue
+        extract_booking_list.append(Booking(row[0], row[9], row[15], row[24], row[12], row[13]))
+
+for each_data in extract_booking_list:
+
+    net_sales = compute_net_sales_booking(each_data) # Compute Net sales
+    set_net_sales_booking(each_data, net_sales) # Update Net sales
+
+    net_profit_margin_non_percentage = compute_net_profit_margin_booking(each_data) # Compute Net profit margin
+    net_profit_margin = format_value_with_percentage(net_profit_margin_non_percentage) # Format value with percentage
+    set_net_profit_margin_booking(each_data, net_profit_margin) # Update Net profit margin
+
+# Create order number list
+all_order_number_list = [each_order_number.get_customer_order_number() for each_order_number in extract_booking_list]
+unique_order_number_set = set(all_order_number_list)
+unique_order_number_list = list (unique_order_number_set)
+
+# <= -500,000
+for row in list_booking_data:
+    if int(row[12]) <= -500000: # Index 12th => Revenue
+        extract_booking_list.append(Booking(row[0], row[9], row[15], row[24], row[12], row[13]))   
+
+# Extract non currency adjustment data
+for each_order_number_list in unique_order_number_list:
+    amount_list = [each_booking.get_booking() for each_booking in extract_booking_list if each_order_number_list == each_booking.get_customer_order_number()]
+    # print(amount_list)
+    total_amount = 0
+    for each_amount in amount_list:
+        total_amount += int(each_amount)
+    print(total_amount)
+    if total_amount > 0:
+        for each_booking in extract_booking_list:
+            if each_booking.get_customer_order_number() == each_order_number_list:
+                each_booking.set_currency_adjustment_boolean(False)
+    total_amount = 0 
+    print(amount_list)   
+
+for each_booking in extract_booking_list:
+    if each_booking.get_currency_adjustment_boolean() == False:
+        print(f"{int(each_booking.get_booking()):,}")
+        print(f"{int(each_booking.get_booking_cost()):,}")
+        print(f"{each_booking.get_product_model()}")
+        print(f"{each_booking.get_order_date()}")
+        print(f"{each_booking.get_customer_order_number()}")
+        print(f"{int(each_booking.get_net_sales_booking()):,}")
+        print(f"{(each_booking.get_net_profit_margin_booking())}")
+        print(f"{(each_booking.get_currency_adjustment_boolean())}")
+        print("\n")
