@@ -93,7 +93,7 @@ Populate Revenue data:
             -compute net sales & update net sales
             -compute net profit margin & update net profit margin
 
-        -if booking <= 500k 
+        -if booking <= -500k 
             -append over_500k_booking_list with (over_500k_booking object( distributor, product model, order date, customer order number, booking, cost))
 
     -loop over_500k_booking_list
