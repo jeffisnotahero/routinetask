@@ -379,15 +379,19 @@ for each_order_number in not_currency_adjustment_order_number_list:
     # unit
     for each_booking_data in extract_booking_list:
         if each_booking_data.get_customer_order_number() == each_order_number:
+            # print(each_booking_data.get_booking())
+            # print(each_booking_data.get_booking_cost())
             booking += int(each_booking_data.get_booking())
             booking_cost += int(each_booking_data.get_booking_cost())
     
+
     for each_booking_data in not_currency_adjustment_booking_data_list:
         if each_order_number == each_booking_data.get_customer_order_number():
-            each_booking_data.booking = booking
-            each_booking_data._booking_cost = booking_cost
-
-
+            each_booking_data.set_booking(booking)
+            each_booking_data.set_booking_cost(booking_cost)
+            # print(each_booking_data.get_booking())
+            # print(each_booking_data.get_booking_cost())
+    
 for each_booking in not_currency_adjustment_booking_data_list:
   
     print(f"{int(each_booking.get_booking()):,}")
