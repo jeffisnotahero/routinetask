@@ -106,7 +106,8 @@ Populate Revenue data:
                 -total = 0
                 -total += amount
             
-            -add this order number into the corresponding list
+            if total_amount > 0
+                -add this order number into the corresponding list
     
     -create a list of booking data that is not for currency adjustmnet
 
