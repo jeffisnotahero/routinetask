@@ -129,18 +129,6 @@ class Booking:
         """
         self._unit_booking = new_unit_booking
 
-    def set_net_sales_booking(self, new_net_sales_booking):
-        """
-        Set net sales booking data to a new value 
-        """
-        self._net_sales_booking = new_net_sales_booking
-
-    def set_net_profit_margin_booking(self, new_net_profit_margin_booking):
-        """
-        Set net profit margin booking to a new value
-        """
-        self._net_profit_margin_booking = new_net_profit_margin_booking
-
 class Revenue:
     """
     Represents the revenue data with data member such as 
@@ -253,19 +241,6 @@ class Revenue:
         Set revenue cost data to a new value 
         """
         self._revenue_cost = new_revenue_cost
-
-    def set_net_sales_revenue(self, new_net_sales_revenue):
-        """
-        Set net sales revenue data to a new value 
-        """
-        self.net_sales_revenue = new_net_sales_revenue
-
-    def set_net_profit_margin_revenue(self, new_net_profit_margin_revenue):
-        """
-        set net profit margin revenue to a new value
-        """
-        self.net_profit_margin_revenue = new_net_profit_margin_revenue
-
 
 # Revenue
 list_revenue_data = compute_revenue_list("cslrevenue.csv")
@@ -393,10 +368,4 @@ print("\n")
 print("<Booking>")
 for each_booking in not_currency_adjustment_booking_data_list:
   
-    print(f"Distributor:{each_booking.get_distributor()}; Product Model:{each_booking.get_product_model()}; Unit:{each_booking.get_unit_booking()}; Booking:{int(each_booking.get_booking()):,}; Net profit margin booking:{(each_booking.get_net_profit_margin_booking())}")
-
-# print(f"{int(each_booking.get_net_sales_booking()):,}")
-# print(f"{int(each_booking.get_booking()):,}")
-# print(f"{int(each_booking.get_booking_cost()):,}")
-# print(f"{each_booking.get_order_date()}")
-# print(f"{each_booking.get_customer_order_number()}")
+    print(f"Distributor:{each_booking.get_distributor()}; Product Model:{each_booking.get_product_model():<10}; Unit:{each_booking.get_unit_booking()}; Booking:{int(each_booking.get_booking()):,}; Net profit margin booking:{(each_booking.get_net_profit_margin_booking())}")
