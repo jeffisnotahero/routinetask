@@ -1,5 +1,5 @@
-Author: Wang Wai Siong
-Date: 14 April 2021
+Author: Wang Wai Siong  
+Date: 14 April 2021  
 Description: Pseudocode for a program that takes differnt region's monthly booking and revenue csv file as input,
              and show the product, which its booking and revenue amount is equal or more than 500k JPY,
              its model, net sales, net profit margin, customer order number and order date
