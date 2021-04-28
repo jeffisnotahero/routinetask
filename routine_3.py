@@ -11,17 +11,14 @@ class Booking:
     """
     Represents the booking data with data member such as 
     distributor, product model, order date,
-    customer order number, cost, net sales, profit margin 
-    and boolean to check if it is currency adjustment order,
-    which default value is True.
+    customer order number, cost, net sales, profit margin.
     """
 
     def __init__(self, distributor=None, product_model=None, customer_order_number=None, order_date=None, booking=None, booking_cost=None, unit_booking=None):
         """
         Initialize data members for 
         distributor, product model, order date,
-        customer order number, cost, net sales, profit margin 
-        and boolean to check if it is currency adjustment order.
+        customer order number, cost, net sales, profit margin.
         """
         self._distributor = distributor
         self._product_model = product_model
@@ -87,29 +84,11 @@ class Booking:
         """
         return self._net_profit_margin_booking
 
-    def set_distributor(self, new_distributor):
-        """
-        Set distributor data to a new value
-        """
-        self._distributor = new_distributor
-
-    def set_product_model(self, new_product_model):
-        """
-        Set product model data to a new value
-        """
-        self._product_model = new_product_model
-
     def set_order_date(self, new_order_date):
         """
         Set order date data to a new value
         """
         self._order_date = new_order_date
-
-    def set_customer_order_number(self, new_customer_order_number):
-        """
-        Set customer order number data to a new value
-        """
-        self._customer_order_number = new_customer_order_number
 
     def set_booking(self, new_booking):
         """
@@ -176,12 +155,6 @@ class Revenue:
         """
         return self._order_date
 
-    def get_customer_order_number(self):
-        """
-        Returns customer order number data
-        """
-        return self._customer_order_number
-
     def get_revenue(self):
         """
         Returns revenue date
@@ -205,42 +178,6 @@ class Revenue:
         Returns net profit margin revenue
         """
         return self._net_profit_margin_revenue
-
-    def set_distributor(self, new_distributor):
-        """
-        Set distributor data to a new value
-        """
-        self._distributor = new_distributor
-
-    def set_product_model(self, new_product_model):
-        """
-        Set product model data to a new value
-        """
-        self._product_model = new_product_model
-
-    def set_order_date(self, new_order_date):
-        """
-        Set order date data to a new value
-        """
-        self._order_date = new_order_date
-
-    def set_customer_order_number(self, new_customer_order_number):
-        """
-        Set customer order number data to a new value
-        """
-        self._customer_order_number = new_customer_order_number
-
-    def set_revenue(self, new_revenue):
-        """
-        Set revenue data to a new value
-        """
-        self._revenue = new_revenue
-
-    def set_revenue_cost(self, new_revenue_cost):
-        """
-        Set revenue cost data to a new value 
-        """
-        self._revenue_cost = new_revenue_cost
 
 # Revenue
 list_revenue_data = compute_revenue_list("cslrevenue.csv")
