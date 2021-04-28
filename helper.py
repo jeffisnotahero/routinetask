@@ -574,3 +574,186 @@ def compute_final_data_based_on_input_selection(product_list, in_normal_or_disco
         print_current_and_total_expected_deliverables(jpy_current_deliverables, total_deliverables)
 
 
+# Helper functions for routine_3.py
+class Booking:
+    """
+    Represents the booking data with data member such as 
+    distributor, product model, order date,
+    customer order number, cost, net sales, profit margin.
+    """
+
+    def __init__(self, distributor=None, product_model=None, customer_order_number=None, order_date=None, booking=None, booking_cost=None, unit_booking=None):
+        """
+        Initialize data members for 
+        distributor, product model, order date,
+        customer order number, cost, net sales, profit margin.
+        """
+        self._distributor = distributor
+        self._product_model = product_model
+        self._order_date = order_date
+        self._customer_order_number = customer_order_number
+        self._booking = booking
+        self._booking_cost = booking_cost
+        self._unit_booking = unit_booking
+        self._net_sales_booking = 0
+        self._net_profit_margin_booking = 0
+    
+    def __repr__(self):
+        """
+        Returns the customer order number when printing object
+        """
+        return self._customer_order_number
+
+    def get_distributor(self):
+        """
+        Returns distributor data
+        """
+        return self._distributor
+
+    def get_product_model(self):
+        """
+        Returns product model data
+        """
+        return self._product_model
+
+    def get_order_date(self):
+        """
+        Returns order date data
+        """
+        return self._order_date
+
+    def get_customer_order_number(self):
+        """
+        Returns customer order number data
+        """
+        return self._customer_order_number
+
+    def get_booking(self):
+        """
+        Returns booking data
+        """
+        return self._booking
+
+    def get_booking_cost(self):
+        """
+        Returns booking cost data
+        """
+        return self._booking_cost
+    
+    def get_unit_booking(self):
+        """
+        Returns booking unit data
+        """
+        return self._unit_booking
+
+    def get_net_profit_margin_booking(self):
+        """
+        Returns net profit margin booking
+        """
+        return self._net_profit_margin_booking
+
+    def set_order_date(self, new_order_date):
+        """
+        Set order date data to a new value
+        """
+        self._order_date = new_order_date
+
+    def set_booking(self, new_booking):
+        """
+        Set booking data to a new value
+        """
+        self._booking = new_booking
+
+    def set_booking_cost(self, new_booking_cost):
+        """
+        Set booking cost data to a new value 
+        """
+        self._booking_cost = new_booking_cost
+    
+    def set_unit_booking(self, new_unit_booking):
+        """
+        Set unit for booking data to a new value
+        """
+        self._unit_booking = new_unit_booking
+
+class Revenue:
+    """
+    Represents the revenue data with data member such as 
+    distributor, product model, order date,
+    customer order number, cost, net sales, profit margin.
+    """
+
+    def __init__(self, distributor=None, product_model=None, order_date=None, customer_order_number=None, revenue=None, revenue_cost=None, unit_revenue=None):
+        """
+        Initialize data member for 
+        distributor, product model, order date,
+        customer order number, cost, net sales, profit margin.
+        """
+        self._distributor = distributor
+        self._product_model = product_model
+        self._order_date = order_date
+        self._customer_order_number = customer_order_number
+        self._revenue = revenue
+        self._revenue_cost = revenue_cost
+        self._unit_revenue = unit_revenue
+        self._net_sales_revenue = 0
+        self._net_profit_margin_revenue = 0
+    
+    def __repr__(self):
+        """
+        Returns the customer order number when printing object
+        """
+        return self._customer_order_number
+                
+    def get_distributor(self):
+        """
+        Returns distributor data
+        """
+        return self._distributor
+
+    def get_product_model(self):
+        """
+        Returns product model data
+        """
+        return self._product_model
+
+    def get_order_date(self):
+        """
+        Returns order date data
+        """
+        return self._order_date
+
+    def get_revenue(self):
+        """
+        Returns revenue date
+        """
+        return self._revenue
+
+    def get_revenue_cost(self):
+        """
+        Returns revenue cost data
+        """
+        return self._revenue_cost
+    
+    def get_unit_revenue(self):
+        """
+        Returns booking unit data
+        """
+        return self._unit_revenue
+
+    def get_net_profit_margin_revenue(self):
+        """
+        Returns net profit margin revenue
+        """
+        return self._net_profit_margin_revenue
+
+def new_booking_data_non_currency_adjustment(each_order_number, extract_booking_list, not_currency_adjustment_booking_data_list):
+    """
+    Function that takes order number from not_currency_adjustment_order_number_list. extract_booking_list as input,
+    and add Booking object, with the distributor, product model and order number of booking data from extract_booking_list,
+    if input order number is same as customer order number of each booking data from extract_booking_list, eventually return nothing.
+    """
+    for current_booking_data in extract_booking_list:
+        if current_booking_data.get_customer_order_number() == each_order_number:
+            not_currency_adjustment_booking_data_list.append(Booking(current_booking_data.get_distributor(), current_booking_data.get_product_model(), each_order_number))
+            return
