@@ -1,4 +1,7 @@
-Logic & pseudocode (29 Mar 2021)
+Author: Wang Wai Siong    
+Date: 29 March 2021  
+Description: Pseudocode for a program that open revenue and booking file as input, display distributor, booking ,revenue, net sales, profit as output  
+             
 
     //Compute 3 distributors & Other's data//
     -Open revenue CSV and read everything into memory
