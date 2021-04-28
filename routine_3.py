@@ -281,14 +281,13 @@ for each_data in extract_revenue_list:
     net_profit_margin = format_value_with_percentage(net_profit_margin_non_percentage) # Format value with percentage
     update_net_profit_margin(each_data, net_profit_margin) # Update Net profit margin
 
-# for x in extract_revenue_list:
-#     print(f"{int(x.get_revenue()):,}")
-#     print(f"{int(x.get_revenue_cost()):,}")
-#     print(f"{x.get_product_model()}")
-#     print(f"{x.get_order_date()}")
-#     print(f"{x.get_customer_order_number()}")
-#     print(f"{int(x.get_net_sales_revenue()):,}")
-#     print(f"{(x.get_net_profit_margin_revenue())}")
+# Print all info
+print("<Revenue>")
+for each_booking in extract_revenue_list:
+  
+    print(f"Distributor:{each_booking.get_distributor()}; Product Model:{each_booking.get_product_model()}; Revenue:{int(each_booking.get_revenue())}; Net profit margin revenue:{(each_booking.get_net_profit_margin_revenue())}")
+
+print("\n")
 
 # Booking
 list_booking_data = compute_booking_list("koreabooking.csv")
@@ -299,15 +298,6 @@ extract_booking_list = []
 for row in list_booking_data:
     if int(row[12]) >= 500000: # Index 12th => Revenue
         extract_booking_list.append(Booking(row[0], row[9], row[24], row[15], row[12], row[13]))
-
-for each_data in extract_booking_list:
-
-    net_sales = compute_net_sales_booking(each_data) # Compute Net sales
-    set_net_sales_booking(each_data, net_sales) # Update Net sales
-
-    net_profit_margin_non_percentage = compute_net_profit_margin_booking(each_data) # Compute Net profit margin
-    net_profit_margin = format_value_with_percentage(net_profit_margin_non_percentage) # Format value with percentage
-    set_net_profit_margin_booking(each_data, net_profit_margin) # Update Net profit margin
 
 # Create order number list
 all_order_number_list = [each_order_number.get_customer_order_number() for each_order_number in extract_booking_list]
@@ -354,9 +344,6 @@ def new_booking_data_non_currency_adjustment(each_order_number, extract_booking_
 for each_order_number in not_currency_adjustment_order_number_list:
     new_booking_data_non_currency_adjustment(each_order_number, extract_booking_list, not_currency_adjustment_booking_data_list)
 
-for x in not_currency_adjustment_booking_data_list:
-    print(x)
-
 # Add order date for objects from list of booking data that is not for currency adjustment
 date_dummy = datetime.strptime("0001/01/01", '%Y/%m/%d').date()
 
@@ -391,15 +378,25 @@ for each_order_number in not_currency_adjustment_order_number_list:
             each_booking_data.set_booking_cost(booking_cost)
             # print(each_booking_data.get_booking())
             # print(each_booking_data.get_booking_cost())
-    
+
+# Compute net profit and net profit margin data
+for each_data in not_currency_adjustment_booking_data_list:
+
+    net_sales = compute_net_sales_booking(each_data) # Compute Net sales
+    set_net_sales_booking(each_data, net_sales) # Update Net sales
+
+    net_profit_margin_non_percentage = compute_net_profit_margin_booking(each_data) # Compute Net profit margin
+    net_profit_margin = format_value_with_percentage(net_profit_margin_non_percentage) # Format value with percentage
+    set_net_profit_margin_booking(each_data, net_profit_margin) # Update Net profit margin
+
+# Print all info    
+print("<Booking>")
 for each_booking in not_currency_adjustment_booking_data_list:
   
-    print(f"{int(each_booking.get_booking()):,}")
-    print(f"{int(each_booking.get_booking_cost()):,}")
-    print(f"{each_booking.get_product_model()}")
-    print(f"{each_booking.get_order_date()}")
-    print(f"{each_booking.get_customer_order_number()}")
-    print(f"{int(each_booking.get_net_sales_booking()):,}")
-    print(f"{(each_booking.get_net_profit_margin_booking())}")
-    print(f"{(each_booking.get_currency_adjustment_boolean())}")
-    print("\n")
+    print(f"Distributor:{each_booking.get_distributor()}; Product Model:{each_booking.get_product_model()}; Booking:{int(each_booking.get_booking())}; Net profit margin booking:{(each_booking.get_net_profit_margin_booking())}")
+
+# print(f"{int(each_booking.get_net_sales_booking()):,}")
+# print(f"{int(each_booking.get_booking()):,}")
+# print(f"{int(each_booking.get_booking_cost()):,}")
+# print(f"{each_booking.get_order_date()}")
+# print(f"{each_booking.get_customer_order_number()}")
