@@ -16,7 +16,7 @@ class Booking:
     which default value is True.
     """
 
-    def __init__(self, distributor=None, product_model=None, customer_order_number=None, order_date=None, booking=None, booking_cost=None):
+    def __init__(self, distributor=None, product_model=None, customer_order_number=None, order_date=None, booking=None, booking_cost=None, unit_booking=None):
         """
         Initialize data members for 
         distributor, product model, order date,
@@ -29,11 +29,14 @@ class Booking:
         self._customer_order_number = customer_order_number
         self._booking = booking
         self._booking_cost = booking_cost
+        self._unit_booking = unit_booking
         self._net_sales_booking = 0
         self._net_profit_margin_booking = 0
-        self._is_currency_adjustment = True
     
     def __repr__(self):
+        """
+        Returns the customer order number when printing object
+        """
         return self._customer_order_number
 
     def get_distributor(self):
@@ -71,12 +74,12 @@ class Booking:
         Returns booking cost data
         """
         return self._booking_cost
-
-    def get_net_sales_booking(self):
+    
+    def get_unit_booking(self):
         """
-        Returns net sales booking data
+        Returns booking unit data
         """
-        return self._net_sales_booking
+        return self._unit_booking
 
     def get_net_profit_margin_booking(self):
         """
@@ -119,6 +122,12 @@ class Booking:
         Set booking cost data to a new value 
         """
         self._booking_cost = new_booking_cost
+    
+    def set_unit_booking(self, new_unit_booking):
+        """
+        Set unit for booking data to a new value
+        """
+        self._unit_booking = new_unit_booking
 
     def set_net_sales_booking(self, new_net_sales_booking):
         """
@@ -132,18 +141,6 @@ class Booking:
         """
         self._net_profit_margin_booking = new_net_profit_margin_booking
 
-    def set_currency_adjustment_boolean(self, boolean):
-        """
-        Update currency adjustment boolean
-        """
-        self._is_currency_adjustment = boolean
-
-    def get_currency_adjustment_boolean(self):
-        """
-        Returns currency adjustment boolean data
-        """
-        return self._is_currency_adjustment
-
 class Revenue:
     """
     Represents the revenue data with data member such as 
@@ -151,7 +148,7 @@ class Revenue:
     customer order number, cost, net sales, profit margin.
     """
 
-    def __init__(self, distributor, product_model, order_date, customer_order_number, revenue, revenue_cost):
+    def __init__(self, distributor=None, product_model=None, order_date=None, customer_order_number=None, revenue=None, revenue_cost=None, unit_revenue=None):
         """
         Initialize data member for 
         distributor, product model, order date,
@@ -163,9 +160,16 @@ class Revenue:
         self._customer_order_number = customer_order_number
         self._revenue = revenue
         self._revenue_cost = revenue_cost
+        self._unit_revenue = unit_revenue
         self._net_sales_revenue = 0
         self._net_profit_margin_revenue = 0
-            
+    
+    def __repr__(self):
+        """
+        Returns the customer order number when printing object
+        """
+        return self._customer_order_number
+                
     def get_distributor(self):
         """
         Returns distributor data
@@ -201,12 +205,12 @@ class Revenue:
         Returns revenue cost data
         """
         return self._revenue_cost
-
-    def get_net_sales_revenue(self):
+    
+    def get_unit_revenue(self):
         """
-        Returns net sales revenue data
+        Returns booking unit data
         """
-        return self._net_sales_revenue
+        return self._unit_revenue
 
     def get_net_profit_margin_revenue(self):
         """
@@ -270,7 +274,7 @@ extract_revenue_list = []
 
 for row in list_revenue_data:
     if int(row[12]) >= 500000: # Index 12th => Revenue
-        extract_revenue_list.append(Revenue(row[0], row[9], row[15], row[24], row[12], row[13]))
+        extract_revenue_list.append(Revenue(row[0], row[9], row[15], row[24], row[12], row[13], row[11]))
 
 for each_data in extract_revenue_list:
 
@@ -281,14 +285,6 @@ for each_data in extract_revenue_list:
     net_profit_margin = format_value_with_percentage(net_profit_margin_non_percentage) # Format value with percentage
     update_net_profit_margin(each_data, net_profit_margin) # Update Net profit margin
 
-# Print all info
-print("<Revenue>")
-for each_booking in extract_revenue_list:
-  
-    print(f"Distributor:{each_booking.get_distributor()}; Product Model:{each_booking.get_product_model()}; Revenue:{int(each_booking.get_revenue())}; Net profit margin revenue:{(each_booking.get_net_profit_margin_revenue())}")
-
-print("\n")
-
 # Booking
 list_booking_data = compute_booking_list("koreabooking.csv")
 
@@ -297,7 +293,7 @@ extract_booking_list = []
 # >= 500,000
 for row in list_booking_data:
     if int(row[12]) >= 500000: # Index 12th => Revenue
-        extract_booking_list.append(Booking(row[0], row[9], row[24], row[15], row[12], row[13]))
+        extract_booking_list.append(Booking(row[0], row[9], row[24], row[15], row[12], row[13], row[11]))
 
 # Create order number list
 all_order_number_list = [each_order_number.get_customer_order_number() for each_order_number in extract_booking_list]
@@ -307,8 +303,7 @@ unique_order_number_list = list (unique_order_number_set)
 # <= -500,000
 for row in list_booking_data:
     if int(row[12]) <= -500000: # Index 12th => Revenue
-        extract_booking_list.append(Booking(row[0], row[9], row[24], row[15], row[12], row[13]))   
-# def __init__(self, distributor=None, product_model=None, customer_order_number=None, order_date=None, booking=None, booking_cost=None):
+        extract_booking_list.append(Booking(row[0], row[9], row[24], row[15], row[12], row[13], row[11]))   
 
 # List of orders number that is not for currency adjustment
 not_currency_adjustment_order_number_list = []
@@ -363,21 +358,19 @@ for each_order_number in not_currency_adjustment_order_number_list:
 for each_order_number in not_currency_adjustment_order_number_list:
     booking = 0
     booking_cost = 0
-    # unit
+    unit = 0
     for each_booking_data in extract_booking_list:
         if each_booking_data.get_customer_order_number() == each_order_number:
-            # print(each_booking_data.get_booking())
-            # print(each_booking_data.get_booking_cost())
             booking += int(each_booking_data.get_booking())
             booking_cost += int(each_booking_data.get_booking_cost())
+            unit += int(each_booking_data.get_unit_booking())
     
 
     for each_booking_data in not_currency_adjustment_booking_data_list:
         if each_order_number == each_booking_data.get_customer_order_number():
             each_booking_data.set_booking(booking)
             each_booking_data.set_booking_cost(booking_cost)
-            # print(each_booking_data.get_booking())
-            # print(each_booking_data.get_booking_cost())
+            each_booking_data.set_unit_booking(unit)
 
 # Compute net profit and net profit margin data
 for each_data in not_currency_adjustment_booking_data_list:
@@ -389,11 +382,18 @@ for each_data in not_currency_adjustment_booking_data_list:
     net_profit_margin = format_value_with_percentage(net_profit_margin_non_percentage) # Format value with percentage
     set_net_profit_margin_booking(each_data, net_profit_margin) # Update Net profit margin
 
-# Print all info    
+# Print all info 
+print("\n") 
+print("<Revenue>")
+for each_booking in extract_revenue_list:
+  
+    print(f"Distributor:{each_booking.get_distributor()}; Product Model:{each_booking.get_product_model()}; Unit:{each_booking.get_unit_revenue()}; Revenue:{int(each_booking.get_revenue()):,}; Net profit margin revenue:{(each_booking.get_net_profit_margin_revenue())}")
+
+print("\n") 
 print("<Booking>")
 for each_booking in not_currency_adjustment_booking_data_list:
   
-    print(f"Distributor:{each_booking.get_distributor()}; Product Model:{each_booking.get_product_model()}; Booking:{int(each_booking.get_booking())}; Net profit margin booking:{(each_booking.get_net_profit_margin_booking())}")
+    print(f"Distributor:{each_booking.get_distributor()}; Product Model:{each_booking.get_product_model()}; Unit:{each_booking.get_unit_booking()}; Booking:{int(each_booking.get_booking()):,}; Net profit margin booking:{(each_booking.get_net_profit_margin_booking())}")
 
 # print(f"{int(each_booking.get_net_sales_booking()):,}")
 # print(f"{int(each_booking.get_booking()):,}")
