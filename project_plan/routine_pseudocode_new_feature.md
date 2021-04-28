@@ -1,4 +1,6 @@
-Logic & pseudocode (29 Mar 2021)
+Author: Wang Wai Siong    
+Date: 29 March 2021  
+Description: Pseudocode for factoring the logic and code of routine project  
 
     //Compute 3 distributors & Other's data//
     -Open revenue CSV and read everything into memory
