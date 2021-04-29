@@ -309,19 +309,16 @@ class Deliverables:
 
 def compute_list(commandline_argument):
     """
-    Returns a list of data opening revenue data file with
+    Returns a list of data opening delieverables data file with
     first parameter
     """
     # Open revenue CSV and read everything into memory
-    with open(commandline_argument, "r", encoding="shift_jis") as database:
+    with open(commandline_argument, "r") as database:
 
-        # row[0] : "distributor"
-        # row[12] : "revenue"
-        # row[13] : "cost"
-        revenue_data = csv.reader(database)
-        next(revenue_data) # Skip first row (Description row)
-        list_revenue_data = list(revenue_data) # Convert csv data to list 
-        return list_revenue_data
+        data = csv.reader(database)
+        next(data) # Skip first row (Description row)
+        list_data = list(data) # Convert csv data to list 
+        return list_data
 
 def create_item_name_list(commandline_argument_1):
     """
