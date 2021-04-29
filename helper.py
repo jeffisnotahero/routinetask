@@ -307,6 +307,22 @@ class Deliverables:
         In discount price list:    {self.in_discount_price_list}\n
         """, end='')
 
+def compute_list(commandline_argument):
+    """
+    Returns a list of data opening revenue data file with
+    first parameter
+    """
+    # Open revenue CSV and read everything into memory
+    with open(commandline_argument, "r", encoding="shift_jis") as database:
+
+        # row[0] : "distributor"
+        # row[12] : "revenue"
+        # row[13] : "cost"
+        revenue_data = csv.reader(database)
+        next(revenue_data) # Skip first row (Description row)
+        list_revenue_data = list(revenue_data) # Convert csv data to list 
+        return list_revenue_data
+
 def create_item_name_list(commandline_argument_1):
     """
     Return a product model name list from deliverables csv file,
@@ -314,25 +330,20 @@ def create_item_name_list(commandline_argument_1):
     """
     item_name_list = []
 
-    # Add name from both csv
-    with open(commandline_argument_1, "r") as deliverables_database:
+    list_deliverables_data = compute_list(commandline_argument_1)
 
-        deliverables_data = csv.reader(deliverables_database)
-        next(deliverables_data)
-        list_deliverables_data = list(deliverables_data)
+    # Populate name list
+    for row in list_deliverables_data:
+        same_name = False
 
-        # Populate name list
-        for row in list_deliverables_data:
-            same_name = False
-
-            # Check if there is same name
-            for items in list_deliverables_data:
-                if items == row[1]:
-                    same_name = True
-            
-            # Insert into list if there is not
-            if same_name == False:
-                item_name_list.append(row[1])
+        # Check if there is same name
+        for items in list_deliverables_data:
+            if items == row[1]:
+                same_name = True
+        
+        # Insert into list if there is not
+        if same_name == False:
+            item_name_list.append(row[1])
 
     return item_name_list
 
