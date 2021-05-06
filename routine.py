@@ -45,7 +45,7 @@ for distributor in distributor_list:
     for row in list_revenue_data:
 
         # Update each distributors' data
-        if row[0] == distributor._name:    
+        if row[0] == distributor.get_name():    
             update_revenue_and_cost(distributor, row)
 
 # Compute each distributors' Net sales data & Net profit margin
@@ -70,7 +70,7 @@ for distributor in distributor_list:
     for row in list_booking_data:
 
         # Update each distributors' data
-        if row[0] == distributor.name:    
+        if row[0] == distributor.get_name():    
             update_booking(distributor, row)
 
 # Compute Region Monthly Total Booking

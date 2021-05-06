@@ -29,6 +29,12 @@ class MonthlyPerformance:
         Net profit margin:  {self._net_profit_margin_revenue}\n
         """, end='')
     
+    def get_name(self):
+        """
+        Returns name data 
+        """
+        return self._name
+    
     def get_revenue(self):
         """
         Returns revenue data
@@ -268,11 +274,6 @@ def compute_net_profit_margin(target_object):
         return net_profit_margin
 
 
-
-
-
-
-
 def format_value_with_percentage(original_value):
     """
     Return a value in percentage format from
@@ -313,7 +314,7 @@ def compute_list(commandline_argument):
     first parameter
     """
     # Open revenue CSV and read everything into memory
-    with open(commandline_argument, "r") as database:
+    with open(commandline_argument, "r", encoding="utf-8_sig") as database:
 
         data = csv.reader(database)
         next(data) # Skip first row (Description row)
