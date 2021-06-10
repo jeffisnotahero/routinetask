@@ -97,38 +97,19 @@ class Region(MonthlyPerformance):
     """
     pass
 
-def compute_booking_list(commandline_argument):
+def compute_list(commandline_argument):
     """
-    Returns a list of booking data opening booking data file with
+    Returns a list of booking or revenue data opening booking data file with
     first parameter
     """
+    # utf-8_sig
     # Open booking CSV and read everything into memory
     with open(commandline_argument, "r", encoding="shift_jis") as database:
 
-        # row[0] : "distributor"
-        # row[12] : "booking"
-        # row[13] : "cost"
-        booking_data = csv.reader(database)
-        next(booking_data)
-        list_booking_data = list(booking_data)
-        return list_booking_data
-
-def compute_revenue_list(commandline_argument):
-    """
-    Returns a list of revenue data opening revenue data file with
-    first parameter
-    """
-    # Open revenue CSV and read everything into memory
-    with open(commandline_argument, "r", encoding="shift_jis") as database:
-
-        # row[0] : "distributor"
-        # row[12] : "revenue"
-        # row[13] : "cost"
-        revenue_data = csv.reader(database)
-
-        next(revenue_data) # Skip first row (Description row)
-        list_revenue_data = list(revenue_data) # Convert csv data to list 
-        return list_revenue_data
+        data = csv.reader(database)
+        next(data)
+        list_data = list(data)
+        return list_data
 
 def create_name_list(commandline_argument_1, commandline_argument_2):
     """
@@ -138,32 +119,18 @@ def create_name_list(commandline_argument_1, commandline_argument_2):
     name_list = []
 
      # Populate name list
-    list_revenue_data = compute_revenue_list(commandline_argument_1)
-    for row in list_revenue_data:
-        same_name = False
+    list_revenue_data = compute_list(commandline_argument_1)
+    for each_row in list_revenue_data:
 
-        # Check if there is same name
-        for items in name_list:
-            if items == row[0]:
-                same_name = True
-        
-        # Insert into list if there is not
-        if same_name == False:
-            name_list.append(row[0])
+        if each_row[0] not in name_list:
+            name_list.append(each_row[0])
 
     # Populate name list
-    list_booking_data = compute_booking_list(commandline_argument_2)
-    for row in list_booking_data:
-        same_name = False
+    list_booking_data = compute_list(commandline_argument_2)
+    for each_row in list_booking_data:
 
-        # Check if there is same name
-        for items in name_list:
-            if items == row[0]:
-                same_name = True
-        
-        # Insert into list if there is not
-        if same_name == False:
-            name_list.append(row[0])
+        if each_row[0] not in name_list:
+            name_list.append(each_row[0])
 
     return name_list
 
@@ -308,19 +275,6 @@ class Deliverables:
         In discount price list:    {self.in_discount_price_list}\n
         """, end='')
 
-def compute_list(commandline_argument):
-    """
-    Returns a list of data opening delieverables data file with
-    first parameter
-    """
-    # Open revenue CSV and read everything into memory
-    with open(commandline_argument, "r", encoding="utf-8_sig") as database:
-
-        data = csv.reader(database)
-        next(data) # Skip first row (Description row)
-        list_data = list(data) # Convert csv data to list 
-        return list_data
-
 def create_item_name_list(commandline_argument_1):
     """
     Return a product model name list from deliverables csv file,
@@ -414,7 +368,7 @@ def compute_revenue_data(commandline_argument, region_monthly_performance):
     Compute revenue data with revenue csv file specified by first argument,
     and add the data into Region Monthly Performance object
     """
-    list_revenue_data = compute_revenue_list(commandline_argument)
+    list_revenue_data = compute_list(commandline_argument)
 
     # Compute Region Monthly Total Booking
     for row in list_revenue_data:

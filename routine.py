@@ -37,7 +37,7 @@ for name in name_list:
 region_monthly_performance = Region("Region_monthly_performance")
 
 # Open revenue CSV and read everything into memory
-list_revenue_data = compute_revenue_list(sys.argv[1])
+list_revenue_data = compute_list(sys.argv[1])
     
 # Compute Monthly Distributors' Revenue & Cost data
 for distributor in distributor_list:
@@ -62,7 +62,7 @@ for distributor in distributor_list:
 compute_revenue_data(sys.argv[1], region_monthly_performance)
 
 # Open booking CSV and read everything into memory
-list_booking_data = compute_booking_list(sys.argv[2])
+list_booking_data = compute_list(sys.argv[2])
 
 # Compute Monthly Distributors' Revenue & Cost data
 for distributor in distributor_list:
